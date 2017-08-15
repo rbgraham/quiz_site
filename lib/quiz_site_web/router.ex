@@ -17,6 +17,10 @@ defmodule QuizSiteWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    resources "/sections", SectionController, except: [:new, :edit]
+    resources "/choices", ChoiceController, except: [:new, :edit]
+    resources "/questions", QuestionController, except: [:new, :edit]
+    resources "/cards", CardController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.
