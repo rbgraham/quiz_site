@@ -101,4 +101,13 @@ defmodule QuizSite.Page do
   def change_card(%Card{} = card) do
     Card.changeset(card, %{})
   end
+
+  @doc """
+  Returns the card with sections and questions preloaded
+  """
+  def preload_card(card) do
+    card
+    |> Repo.preload(:sections)
+    |> Repo.preload(:questions)
+  end
 end

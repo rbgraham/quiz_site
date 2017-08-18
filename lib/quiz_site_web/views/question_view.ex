@@ -13,6 +13,7 @@ defmodule QuizSiteWeb.QuestionView do
   def render("question.json", %{question: question}) do
     %{id: question.id,
       question: question.question,
+      card_id: question.card_id,
       subtext: question.subtext}
   end
 end

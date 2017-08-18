@@ -14,6 +14,7 @@ defmodule QuizSiteWeb.SectionView do
     %{id: section.id,
       title: section.title,
       content: section.content,
+      card_id: section.card_id,
       cta: section.cta}
   end
 end

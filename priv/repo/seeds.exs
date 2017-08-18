@@ -18,15 +18,15 @@ defmodule QuizSite.DatabaseSeeder do
   alias QuizSite.Questions.Choice
 
   @card_list [
-    %{ title: "who-are-you", class: Question, navigation: "", site: "celeb-quiz", sequence: 2},
-    %{ title: "fin", class: Section, navigation: "", site: "celeb-quiz", sequence: 3},
-    %{ title: "title", class: Section, navigation: "", site: "celeb-quiz", sequence: 1},
+    %{ title: "How would you say you spend? | Celebrity Spending", class: Question, navigation: "", site: "celeb-quiz", sequence: 2},
+    %{ title: "Thanks for taking the celebrity spending quiz", class: Section, navigation: "", site: "celeb-quiz", sequence: 3},
+    %{ title: "Take the celebrity spending quiz", class: Section, navigation: "", site: "celeb-quiz", sequence: 1},
   ]
 
   @card_data %{ 
-    "fin" => %{ content: "Thanks for taking the quiz!", cta: "Take another quiz!", title: "Thank you." },
-    "title" => %{ content: "Learn which celebrity is your financial twin.", cta: "Find out who you are!", title: "The celebrity spending comparison quiz" },
-    "who-are-you" =>  %{ question: "Are you broke?", subtext: "It can happen to the best of us.", choices: [%{choice: "Def."}, %{choice: "No way."}] },
+    3 => %{ content: "Thanks for taking the quiz!", cta: "Take another quiz!", title: "Thank you." },
+    1 => %{ content: "Learn which celebrity is your financial twin.", cta: "Find out who you are!", title: "The celebrity spending comparison quiz" },
+    2 =>  %{ question: "Are you broke?", subtext: "It can happen to the best of us.", choices: [%{choice: "Def."}, %{choice: "No way."}] },
   }
 
   def insert_card(card) do
@@ -41,7 +41,7 @@ defmodule QuizSite.DatabaseSeeder do
 
   def insert_cards do
     @card_list
-    |> Enum.each(fn (card) -> insert_content_card(card, @card_data[card[:title]], card[:class]) end)
+    |> Enum.each(fn (card) -> insert_content_card(card, @card_data[card[:sequence]], card[:class]) end)
   end
 
   def clear do

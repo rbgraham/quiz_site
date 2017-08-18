@@ -22,64 +22,7 @@ import axios from "axios"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
-
-function TitleCard(props) {
-   return (
-      <div>
-        <h1>{props.card.title}</h1>
-      </div>
-   );
-}
-
-function BlankCard(props) {
-    return (
-      <div></div>
-    );
-}
-
-class QuizSite extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {cards: []};
-  }
-
-  componentDidMount() {
-    var _this = this;
-    this.serverRequest =
-      axios
-        .get("/cards")
-        .then(function(result) {
-          _this.setState({
-            cards: result.data.data
-          });
-        })
-  }
-
-  componentWillUnmount() {
-    this.serverRequest.abort();
-  }
-
-  getInitialCard() {
-   return this.state.cards.find((elem) => { return elem.sequence === 1; } );
-  }
-
-  render() {
-    let card = null;
-    if (this.state.cards.length > 0) {
-      card = <TitleCard card={this.getInitialCard()}/>;
-    } else {
-      card = <BlankCard/>;
-    }
-
-    window.w = this;
-
-    return (
-      <div>
-        { card }
-      </div>
-    );
-  }
-}
+import { QuizSite } from "./quiz_site"
 
 ReactDOM.render(
   <QuizSite/>,
