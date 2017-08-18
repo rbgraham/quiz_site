@@ -7,6 +7,55 @@ var Cards = {
       <div></div>
     );
   },
+
+  section: function (props) {
+    return (
+        <div>
+          <h1>
+          { props.section.title }
+          </h1>
+          <div>
+            <p>
+              { props.section.content }
+            </p>
+          </div>
+          <button onClick={ props.click }>{ props.section.cta }</button>
+        </div>
+      );
+  },
+
+  choice: function (props) {
+    return (
+      <div className="choice">
+        <button onClick={props.click} value={props.choice.choice}>
+          { props.choice.choice }
+        </button>
+      </div>
+    );
+  },
+
+  question: function (props) {
+    var choices = [];
+    props.question.choices.forEach((choice) => {
+      choices.push(<Cards.choice key={choice.choice} choice={choice} click={ props.click }/>);
+    });
+    return (
+        <div>
+          <h1>
+          { props.question.question }
+          </h1>
+          <div>
+            <span className="small">
+              { props.question.subtext }
+            </span>
+          </div>
+          <div className="choices">
+            { choices }
+          </div>
+          <button onClick={ props.click }>placeholder</button>
+        </div>
+      );
+  }
 }
 
 class QuizSite extends React.Component {
@@ -14,7 +63,8 @@ class QuizSite extends React.Component {
     super(props);
     this.state = {
       cards: [],
-      sequence: 1
+      sequence: 1,
+      choices: []
     };
   }
 
@@ -39,43 +89,25 @@ class QuizSite extends React.Component {
                                  { return elem.sequence === this.state.sequence; });
   }
 
-  sectionCard(section) {
-    return (
-        <div>
-          <h1>
-          { section.title }
-          </h1>
-          <div>
-            <p>
-              { section.content }
-            </p>
-          </div>
-          <button onClick={ () => this.advance(this.state.sequence, this.state.cards) }>{ section.cta }</button>
-        </div>
-      );
+  maxSequence() {
+    return Math.max(...this.state.cards.map((elem) => { return elem.sequence }));
   }
 
-  questionCard(question) {
-    return (
-        <div>
-          <h1>
-          { question.question }
-          </h1>
-          <div>
-            <span class="small">
-              { question.content }
-            </span>
-          </div>
-          <button onClick={ () => this.advance(this.state.sequence, this.state.cards) }></button>
-        </div>
-      );
-  }
+  advance(sequence, cards, e) {
+    let seq = sequence + 1;
+    if (seq > this.maxSequence()) {
+      seq = this.maxSequence();
+    }
 
-  advance(sequence, cards) {
-    console.log("ADVANCE>");
+    var choices = this.state.choices;
+    if (e != null) {
+      choices.push(e.target.value);
+    }
+
     this.setState({ 
       cards: cards,
-      sequence: sequence + 1
+      sequence: seq,
+      choices: choices
     });
   }
 
@@ -87,9 +119,9 @@ class QuizSite extends React.Component {
       const question = cardObj.questions[0];
       
       if (section != null) {
-        return this.sectionCard(section);
+        return (<Cards.section section={ section } click={ () => this.advance(this.state.sequence, this.state.cards, null) }/>);
       } else {
-        return this.questionCard(question);
+        return (<Cards.question question={question} click={ (e) => this.advance(this.state.sequence, this.state.cards, e) }/>);
       }
       
     } else {

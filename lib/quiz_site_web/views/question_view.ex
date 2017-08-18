@@ -11,9 +11,11 @@ defmodule QuizSiteWeb.QuestionView do
   end
 
   def render("question.json", %{question: question}) do
+    question = QuizSite.Cards.preload_question(question)
     %{id: question.id,
       question: question.question,
       card_id: question.card_id,
+      choices: render_many(question.choices, QuizSiteWeb.ChoiceView, "choice.json"),
       subtext: question.subtext}
   end
 end

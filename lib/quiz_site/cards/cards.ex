@@ -226,4 +226,12 @@ defmodule QuizSite.Cards do
         QuizSite.Questions.create_question_and_choices(question, data)
     end
   end
+
+  @doc """
+  Returns a question with preloaded choices
+  """
+  def preload_question(question) do
+    question
+    |> Repo.preload(:choices)
+  end
 end
