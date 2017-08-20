@@ -202,23 +202,21 @@ defmodule QuizSite.Cards do
   @doc """
   Returns either a Section or a Question with Choices
 
-  klass should be Section or Question
-
   ## Examples
 
-      iex> add_question_or_section(card, Question, %{... choices: %{}})
+      iex> add_question_or_section(card, %{... choices: %{}})
       %Question{ ... }
 
   """
-  def add_question_or_section(card, klass, data) do
+  def add_question_or_section(card, data) do
     import Ecto
-    case klass do
-      Section ->
+    case data do
+      %{ content: _ } ->
         card
         |> build_assoc(:sections)
         |> Section.changeset(data)
         |> Repo.insert
-      Question ->
+      %{ question: _ } ->
         {:ok, question} = card
           |> build_assoc(:questions)
           |> Question.changeset(data)

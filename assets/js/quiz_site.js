@@ -9,6 +9,11 @@ var Cards = {
   },
 
   section: function (props) {
+    let cta = null;
+    if (props.section.cta) {
+      cta = <button onClick={ props.click }>{ props.section.cta }</button>;
+    }
+
     return (
         <div>
           <h1>
@@ -19,7 +24,7 @@ var Cards = {
               { props.section.content }
             </p>
           </div>
-          <button onClick={ props.click }>{ props.section.cta }</button>
+          { cta }
         </div>
       );
   },
@@ -35,6 +40,14 @@ var Cards = {
   },
 
   question: function (props) {
+    let subtext = null;
+    if (props.question.subtext) {
+      subtext = (
+        <span className="small">
+          { props.question.subtext }
+        </span>
+      );  
+    }
     var choices = [];
     props.question.choices.forEach((choice) => {
       choices.push(<Cards.choice key={choice.choice} choice={choice} click={ props.click }/>);
@@ -45,14 +58,11 @@ var Cards = {
           { props.question.question }
           </h1>
           <div>
-            <span className="small">
-              { props.question.subtext }
-            </span>
+          { subtext }
           </div>
           <div className="choices">
             { choices }
           </div>
-          <button onClick={ props.click }>placeholder</button>
         </div>
       );
   }
@@ -111,19 +121,35 @@ class QuizSite extends React.Component {
     });
   }
 
+  sectionCta() {
+    return () => this.advance(this.state.sequence, this.state.cards, null);
+  }
+
+  questionCta() {
+    return (e) => this.advance(this.state.sequence, this.state.cards, e);
+  }
+
   render() {
-    const cardObj = this.getCard();
     let card = null;
     if (this.state.cards.length > 0 ) {
-      const section = cardObj.sections[0];
-      const question = cardObj.questions[0];
+      const card = this.getCard();
+      var questions = [];
+      card.questions.forEach((q) => {
+        questions.push(<Cards.question key={ q.id } question={ q } click={ this.questionCta() }/>);  
+      });
+
+      var sections = [];
+      card.sections.forEach((s) => {
+        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta() }/>);
+      });
       
-      if (section != null) {
-        return (<Cards.section section={ section } click={ () => this.advance(this.state.sequence, this.state.cards, null) }/>);
-      } else {
-        return (<Cards.question question={question} click={ (e) => this.advance(this.state.sequence, this.state.cards, e) }/>);
-      }
-      
+      return (
+        <div>
+          <div> { questions } </div>
+          <div> { sections } </div>
+        </div>
+      );
+
     } else {
       return (<Cards.blank />);
     }

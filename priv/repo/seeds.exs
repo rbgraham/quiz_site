@@ -18,15 +18,26 @@ defmodule QuizSite.DatabaseSeeder do
   alias QuizSite.Questions.Choice
 
   @card_list [
-    %{ title: "How would you say you spend? | Celebrity Spending", class: Question, navigation: "", site: "celeb-quiz", sequence: 2},
-    %{ title: "Thanks for taking the celebrity spending quiz", class: Section, navigation: "", site: "celeb-quiz", sequence: 3},
-    %{ title: "Take the celebrity spending quiz", class: Section, navigation: "", site: "celeb-quiz", sequence: 1},
+    %{ title: "Q3 | Celebrity Spending", navigation: "", site: "celeb-quiz", sequence: 4},
+    %{ title: "Q2 | Celebrity Spending", navigation: "", site: "celeb-quiz", sequence: 3},
+    %{ title: "Q1 | Celebrity Spending", navigation: "", site: "celeb-quiz", sequence: 2},
+    %{ title: "Thanks for taking the celebrity spending quiz", navigation: "", site: "celeb-quiz", sequence: 5},
+    %{ title: "Take the celebrity spending quiz", navigation: "", site: "celeb-quiz", sequence: 1},
   ]
 
   @card_data %{ 
-    3 => %{ content: "Thanks for taking the quiz!", cta: "Take another quiz!", title: "Thank you." },
-    1 => %{ content: "Learn which celebrity is your financial twin.", cta: "Find out who you are!", title: "The celebrity spending comparison quiz" },
-    2 =>  %{ question: "Are you broke?", subtext: "It can happen to the best of us.", choices: [%{choice: "Def."}, %{choice: "No way."}] },
+    5 => [%{ content: "Thanks for taking the quiz!", title: "Thank you." }],
+    1 => [%{ content: "Learn which celebrity is your financial twin.", cta: "Find out who you are!", title: "The celebrity spending comparison quiz" }],
+    2 => [%{ question: "Are you broke?", choices: [%{choice: "Def."}, %{choice: "No way."}] }],
+    4 => [
+      %{ question: "When I buy something I feel", choices: [ %{ choice: "Hot" }, %{ choice: "Bored" }, %{ choice: "Troubled" }]},
+      %{ content: "This is a section of content", title: "This is a title for a section"},
+      %{ content: "This is a second section", title: "2nd section title"}
+      ],
+    3 => [
+      %{ question: "Do you save money for the future each month?", choices: [%{choice: "Yo. Word"}, %{choice: "Nah. New shoes beckon."}, %{choice: "Sometimes"}, %{choice: "What money?"}]}, 
+      %{ content: "Answer as honestly as possible.", title: "Question tips" }
+      ],
   }
 
   def insert_card(card) do
@@ -34,14 +45,14 @@ defmodule QuizSite.DatabaseSeeder do
     |> Repo.insert!
   end
 
-  def insert_content_card(card, content, klass) do
-    insert_card(card)
-    |> QuizSite.Cards.add_question_or_section(klass, content)
+  def insert_content_card(card, content) do
+    card = insert_card(card)
+    Enum.each(content, &(QuizSite.Cards.add_question_or_section(card, &1)))
   end
 
   def insert_cards do
     @card_list
-    |> Enum.each(fn (card) -> insert_content_card(card, @card_data[card[:sequence]], card[:class]) end)
+    |> Enum.each(fn (card) -> insert_content_card(card, @card_data[card[:sequence]]) end)
   end
 
   def clear do

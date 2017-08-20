@@ -18,6 +18,6 @@ defmodule QuizSite.Cards.Section do
   def changeset(%Section{} = section, attrs) do
     section
     |> cast(attrs, [:title, :content, :cta])
-    |> validate_required([:title, :content, :cta])
+    |> validate_required([:title, :content])
   end
 end
