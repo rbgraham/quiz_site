@@ -212,10 +212,11 @@ defmodule QuizSite.Cards do
     import Ecto
     case data do
       %{ content: _ } ->
-        card
-        |> build_assoc(:sections)
-        |> Section.changeset(data)
-        |> Repo.insert
+        {:ok, section} = card
+          |> build_assoc(:sections)
+          |> Section.changeset(data)
+          |> Repo.insert
+        QuizSite.Sections.create_section_and_conditions(section, data)
       %{ question: _ } ->
         {:ok, question} = card
           |> build_assoc(:questions)
@@ -231,5 +232,13 @@ defmodule QuizSite.Cards do
   def preload_question(question) do
     question
     |> Repo.preload(:choices)
+  end
+
+  @doc """
+  Returns a section with preloaded choices
+  """
+  def preload_section(section) do
+    section
+    |> Repo.preload(:conditions)
   end
 end

@@ -11,10 +11,12 @@ defmodule QuizSiteWeb.SectionView do
   end
 
   def render("section.json", %{section: section}) do
+    section = QuizSite.Cards.preload_section(section)
     %{id: section.id,
       title: section.title,
       content: section.content,
       card_id: section.card_id,
+      conditions: render_many(section.conditions, QuizSiteWeb.ConditionView, "condition.json"),
       cta: section.cta}
   end
 end

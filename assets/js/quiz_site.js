@@ -8,27 +8,59 @@ var Cards = {
     );
   },
 
-  section: function (props) {
-    let cta = null;
-    if (props.section.cta) {
-      cta = <button onClick={ props.click }>{ props.section.cta }</button>;
+  section: class Section extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { section: props.section, click: props.click, choices: props.choices }
     }
 
-    return (
-        <div>
-          <h1>
-          { props.section.title }
-          </h1>
-          <div>
-            <p>
-              { props.section.content }
-            </p>
-          </div>
-          { cta }
-        </div>
-      );
-  },
+    shouldDisplay() {
+      if (this.state.section.conditions.length == 0) {
+        return true;
+      } else {
+        var conditions = [];
+        this.state.section.conditions.forEach((c) => {
+          conditions.push( this.state.choices.find((e) => {
+            return e == c.condition;
+          }) );
+        });
 
+        if (conditions.filter((c) => { return c != undefined; }).length < conditions.length) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+
+    render() {
+      let cta = null;
+      if (this.state.section.cta) {
+        cta = <button onClick={ this.state.click }>{ this.state.section.cta }</button>;
+      }
+
+      var rendered = (
+          <div>
+            <h1>
+            { this.state.section.title }
+            </h1>
+            <div>
+              <p>
+                { this.state.section.content }
+              </p>
+            </div>
+            { cta }
+          </div>
+      );
+
+      if (this.shouldDisplay()) {
+        return rendered;
+      } else {
+        return Cards.blank();
+      }
+    }
+  },
+    
   choice: function (props) {
     return (
       <div className="choice">
@@ -65,6 +97,18 @@ var Cards = {
           </div>
         </div>
       );
+  },
+
+  layout: class Layout extends React.Component {
+    constructor(props){
+      super(props);
+    }
+    componentWillUpdate(nextProps) {
+      document.title = nextProps.title;
+    }
+    render(){
+      return null;
+    }
   }
 }
 
@@ -140,18 +184,25 @@ class QuizSite extends React.Component {
 
       var sections = [];
       card.sections.forEach((s) => {
-        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta() }/>);
+        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta() } choices={ this.state.choices } />);
       });
-      
+      const title = card.title + " | Celebrity Financial Twin Quiz";
+
       return (
         <div>
+          <Cards.layout title={ title } />
           <div> { questions } </div>
           <div> { sections } </div>
         </div>
       );
 
     } else {
-      return (<Cards.blank />);
+      return (
+        <div>
+          <Cards.layout title="Celebrity Financial Twin Quiz"/>
+          <Cards.blank />
+        </div>
+      );
     }
   }
 }

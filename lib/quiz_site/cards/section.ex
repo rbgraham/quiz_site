@@ -10,6 +10,7 @@ defmodule QuizSite.Cards.Section do
     field :title, :string
 
     belongs_to :card, QuizSite.Page.Card
+    has_many :conditions, QuizSite.Sections.Condition
 
     timestamps()
   end

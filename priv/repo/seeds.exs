@@ -26,7 +26,10 @@ defmodule QuizSite.DatabaseSeeder do
   ]
 
   @card_data %{ 
-    5 => [%{ content: "Thanks for taking the quiz!", title: "Thank you." }],
+    5 => [
+      %{ content: "Thanks for taking the quiz!", title: "Thank you." },
+      %{ content: "You're Jeremy Renner. Not bad, friend.", title: "Renner", conditions: [ %{ condition: "Yo. Word" } ]},
+      ],
     1 => [%{ content: "Learn which celebrity is your financial twin.", cta: "Find out who you are!", title: "The celebrity spending comparison quiz" }],
     2 => [%{ question: "Are you broke?", choices: [%{choice: "Def."}, %{choice: "No way."}] }],
     4 => [
