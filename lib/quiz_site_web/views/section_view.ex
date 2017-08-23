@@ -16,6 +16,7 @@ defmodule QuizSiteWeb.SectionView do
       title: section.title,
       content: section.content,
       card_id: section.card_id,
+      image_path: section.image_path,
       conditions: render_many(section.conditions, QuizSiteWeb.ConditionView, "condition.json"),
       cta: section.cta}
   end

@@ -36,19 +36,27 @@ var Cards = {
     render() {
       let cta = null;
       if (this.state.section.cta) {
-        cta = <button onClick={ this.state.click }>{ this.state.section.cta }</button>;
+        cta = <button className="btn btn-warning btn-large h4" onClick={ this.state.click }>{ this.state.section.cta }</button>;
+      }
+
+      let img = null;
+      if (this.state.section.image_path) {
+        const src = Cards.image_path(this.state.section.image_path);
+        img = (
+          <img src={src} width="125px" className="center-block" />
+        );
       }
 
       var rendered = (
-          <div>
-            <h1>
+          <div className="text-center">
+            <div className="img-container">
+              { img }
+            </div>
+            <h1 >
             { this.state.section.title }
             </h1>
-            <div>
-              <p>
-                { this.state.section.content }
-              </p>
-            </div>
+            <p className="h5">{ this.state.section.content }</p>
+            <br/>
             { cta }
           </div>
       );
@@ -62,13 +70,25 @@ var Cards = {
   },
     
   choice: function (props) {
-    return (
-      <div className="choice">
-        <button onClick={props.click} value={props.choice.choice}>
-          { props.choice.choice }
-        </button>
-      </div>
+    // TODO refactor unite the one in section DRY
+    let img = null;
+    var display = ( 
+      <button className="btn btn-default choice big-btn" onClick={props.click} value={props.choice.choice}>
+        { props.choice.choice }
+      </button>
     );
+
+    if (props.choice.image_path) {
+      const src = Cards.image_path(props.choice.image_path);
+      img = (
+          <button className="btn btn-default choice" onClick={props.click} value={props.choice.choice}>
+            <img src={src} height="100px;" className="center-block"/>
+          </button>
+      );
+      display = img;
+    }
+
+    return display;
   },
 
   question: function (props) {
@@ -85,14 +105,14 @@ var Cards = {
       choices.push(<Cards.choice key={choice.choice} choice={choice} click={ props.click }/>);
     });
     return (
-        <div>
+        <div className="text-center">
           <h1>
           { props.question.question }
           </h1>
           <div>
           { subtext }
           </div>
-          <div className="choices">
+          <div className="choices text-center">
             { choices }
           </div>
         </div>
@@ -109,6 +129,10 @@ var Cards = {
     render(){
       return null;
     }
+  },
+
+  image_path: function (path) {
+    return "/images/" + path;
   }
 }
 
@@ -154,8 +178,8 @@ class QuizSite extends React.Component {
     }
 
     var choices = this.state.choices;
-    if (e != null) {
-      choices.push(e.target.value);
+    if (e) {
+      choices.push(e.currentTarget.value);
     }
 
     this.setState({ 
@@ -189,7 +213,7 @@ class QuizSite extends React.Component {
       const title = card.title + " | Celebrity Financial Twin Quiz";
 
       return (
-        <div>
+        <div className="top-spacer">
           <Cards.layout title={ title } />
           <div> { questions } </div>
           <div> { sections } </div>
@@ -198,7 +222,7 @@ class QuizSite extends React.Component {
 
     } else {
       return (
-        <div>
+        <div className="container col-xs-12 col-md-12">
           <Cards.layout title="Celebrity Financial Twin Quiz"/>
           <Cards.blank />
         </div>

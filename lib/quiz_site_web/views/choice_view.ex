@@ -12,6 +12,7 @@ defmodule QuizSiteWeb.ChoiceView do
 
   def render("choice.json", %{choice: choice}) do
     %{id: choice.id,
+      image_path: choice.image_path,
       choice: choice.choice}
   end
 end

@@ -1,1 +1,58 @@
 /* This file is for your main application css. */
+
+a.quietlink {
+  color: #000;
+  font-color: #000;
+}
+
+a:active.quietlink, a:hover.quietlink {
+  color: #000;
+  text-decoration: none;
+}
+
+.no-top {
+  margin-top: 0px;
+}
+
+.header-top {
+  margin-top: 18px;
+}
+
+.centered {
+  margin: 0 auto;
+}
+
+.choices {
+  margin-bottom: 2em;
+}
+
+.choice {
+  margin-right: 2em;
+  margin-top: 1em;
+}
+
+.top-spacer {
+  margin-top: 8em;
+}
+
+.img-container {
+  width: 100%;
+  display: block;
+}
+
+body {
+  background-color: #327fee;
+  color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  color: #fff;
+}
+
+.btn.h4 {
+  font-size: 1.3em;
+}
+
+.big-btn {
+  font-size: 1.3em;
+}
