@@ -7,6 +7,7 @@ defmodule QuizSite.Questions.Choice do
   schema "choices" do
     field :choice, :string
     field :image_path, :string
+    field :microcopy, :boolean
 
     belongs_to :question, QuizSite.Card.Question
 
@@ -16,7 +17,7 @@ defmodule QuizSite.Questions.Choice do
   @doc false
   def changeset(%Choice{} = choice, attrs) do
     choice
-    |> cast(attrs, [:choice, :image_path])
+    |> cast(attrs, [:choice, :image_path, :microcopy])
     |> validate_required([:choice])
   end
 end

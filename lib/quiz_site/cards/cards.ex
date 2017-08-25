@@ -211,13 +211,13 @@ defmodule QuizSite.Cards do
   def add_question_or_section(card, data) do
     import Ecto
     case data do
-      %{ content: _ } ->
+      %{ "content" => _ } ->
         {:ok, section} = card
           |> build_assoc(:sections)
           |> Section.changeset(data)
           |> Repo.insert
         QuizSite.Sections.create_section_and_conditions(section, data)
-      %{ question: _ } ->
+      %{ "question" => _ } ->
         {:ok, question} = card
           |> build_assoc(:questions)
           |> Question.changeset(data)

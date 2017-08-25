@@ -22,6 +22,8 @@ defmodule QuizSiteWeb.Router do
     resources "/questions", QuestionController, except: [:new, :edit]
     resources "/cards", CardController, except: [:new, :edit]
     resources "/conditions", ConditionController, except: [:new, :edit]
+    resources "/results", ResultController, except: [:new, :edit]
+    resources "/responses", ResponseController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.

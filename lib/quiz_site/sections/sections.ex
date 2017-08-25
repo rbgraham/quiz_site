@@ -106,15 +106,23 @@ defmodule QuizSite.Sections do
   Returns a list of {status, %Condition{}}
 
   ## Examples
-      iex> create_section_and_conditions(%Section{}, %{choices: [...]})
+      iex> create_section_and_conditions(%Section{}, %{conditions: [...]})
       [{:ok, %Choice{}}, ...]
   """
-  def create_section_and_conditions(section, %{conditions: list }) do
+  def create_section_and_conditions(section, %{"conditions" => list }) when is_list(list) do
+    require Logger
     list
     |> Enum.each(fn (condition) -> create_condition_for_section(section, condition) end)
   end
 
-  def create_section_and_conditions(section, _) do
+  def create_section_and_conditions(_, %{ "conditions" => conditions}) do
+    require Logger
+    Logger.warn "Failed to create conditions: #{inspect(conditions)}"
+  end
+
+  def create_section_and_conditions(_, conditions) do
+    require Logger
+    Logger.warn "Section without conditions: #{inspect(conditions)}"
   end
 
   @doc """
@@ -124,11 +132,11 @@ defmodule QuizSite.Sections do
       iex> create_choice_for_section(%Section{}, %{})
       {:ok, %Condition{}}
   """
-  def create_condition_for_section(section, condition) do
+  def create_condition_for_section(section, %{ "condition" => condition }) do
     import Ecto
     section
     |> build_assoc(:conditions)
-    |> Condition.changeset(condition)
+    |> Condition.changeset(%{ condition: condition })
     |> Repo.insert
   end
 

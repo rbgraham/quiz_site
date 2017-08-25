@@ -1,5 +1,6 @@
 import axios from "axios"
 import React from "react"
+var qs = require('qs');
 
 var Cards = { 
   blank: function (props) {
@@ -70,19 +71,23 @@ var Cards = {
   },
     
   choice: function (props) {
-    // TODO refactor unite the one in section DRY
     let img = null;
     var display = ( 
-      <button className="btn btn-default choice big-btn" onClick={props.click} value={props.choice.choice}>
+      <button className="btn btn-default choice big-btn" onClick={props.click} value={props.choice.id} data-choice={props.choice.choice}>
         { props.choice.choice }
       </button>
     );
 
     if (props.choice.image_path) {
       const src = Cards.image_path(props.choice.image_path);
+      let microcopy = null;
+      if (props.choice.microcopy) {
+        microcopy = props.choice.choice;
+      }
       img = (
-          <button className="btn btn-default choice" onClick={props.click} value={props.choice.choice}>
+          <button className="btn btn-default choice" onClick={props.click} value={props.choice.id} data-choice={props.choice.choice}>
             <img src={src} height="100px;" className="center-block"/>
+            { microcopy }
           </button>
       );
       display = img;
@@ -142,7 +147,8 @@ class QuizSite extends React.Component {
     this.state = {
       cards: [],
       sequence: 1,
-      choices: []
+      choices: [],
+      result_id: null,
     };
   }
 
@@ -173,28 +179,70 @@ class QuizSite extends React.Component {
 
   advance(sequence, cards, e) {
     let seq = sequence + 1;
+    var result_id = this.state.result_id;
     if (seq > this.maxSequence()) {
       seq = this.maxSequence();
     }
 
     var choices = this.state.choices;
     if (e) {
-      choices.push(e.currentTarget.value);
+      choices.push(e.currentTarget.getAttribute("data-choice"));
+      if (result_id) {
+        this.storeResponse(result_id, e.currentTarget.value);
+        this.completeResult(seq, result_id);
+      } else {
+        this.initResult(e.currentTarget.value);
+      }
     }
 
     this.setState({ 
       cards: cards,
       sequence: seq,
-      choices: choices
+      choices: choices,
+      result_id: result_id
     });
   }
 
-  sectionCta() {
+  storeResultId(result_id) {
+    this.setState({result_id: result_id});
+  }
+
+  sectionCta(sequence) {
     return () => this.advance(this.state.sequence, this.state.cards, null);
   }
 
   questionCta() {
     return (e) => this.advance(this.state.sequence, this.state.cards, e);
+  }
+
+  initResult(choice_id) {
+    var result_id = null;
+    var _this = this;
+    this.createResultRequest =
+      axios
+        .post("/results", qs.stringify({ result: { quiz_name: this.state.cards[0].site}, _csrf_token: this.csrfToken() }))
+        .then((result) => {
+          result_id = result.data.data.id;
+          _this.storeResultId(result_id);
+          _this.storeResponse(result_id, choice_id);
+        })
+  }
+
+  storeResponse(result_id, choice_id) {
+    axios
+          .post("/responses", qs.stringify({ response: { result_id: result_id, choice_id: choice_id }, _csrf_token: this.csrfToken() }))
+  }
+
+  completeResult(sequence, result_id) {
+    if (sequence == this.maxSequence()) {
+      axios
+        .put("/results/" + result_id, qs.stringify({ result: { completed: true }, _csrf_token: this.csrfToken() }))
+    }
+  }
+
+  csrfToken() {
+    var titleCard = document.getElementById("title-card");
+    return titleCard.getAttribute("data-csrf-token");
   }
 
   render() {
@@ -208,7 +256,7 @@ class QuizSite extends React.Component {
 
       var sections = [];
       card.sections.forEach((s) => {
-        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta() } choices={ this.state.choices } />);
+        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta(card.sequence) } choices={ this.state.choices } />);
       });
       const title = card.title + " | Celebrity Financial Twin Quiz";
 

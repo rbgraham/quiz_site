@@ -28,3 +28,6 @@ import_config "#{Mix.env}.exs"
 
 config :quiz_site,
   page_title_suffix: "Celebrity Financial Twin Quiz"
+
+config :quiz_site,
+  yaml_data_file: "celeb-site.yml"

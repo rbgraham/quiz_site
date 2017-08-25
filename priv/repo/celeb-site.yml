@@ -1,0 +1,215 @@
+cards:
+  - card:
+    title: "Take the celebrity spending quiz"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 1
+    sections:
+      - content: "Most people aren't Warren Buffet but tell me you aren't Mike Tyson."
+        cta: "Find out now!"
+        title: "Do you spend like Matt Damon or MC Hammer?"
+        image_path: "money.png"
+
+  - card:
+    title: "Saving | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 2
+    questions:
+      - question: "How would you rate your saving habits?"
+        choices: 
+          - choice: "Good."
+            image_path: "thumbsup.png"
+          - choice: "Bad"
+            image_path: "crying.png"
+
+  - card:
+    title: "Eating out | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 3
+    questions:
+      - question: "How often do you eat out?"
+        choices: 
+          - choice: "Daily"
+          - choice: "Weekly"
+          - choice: "Monthly"
+          - choice: "Annually"
+
+  - card:
+    title: "Day job | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 4
+    questions:
+      - question: "Do you earn money from a side hustle?"
+        choices:
+          - choice: "More than one"
+            image_path: "strong.png"
+          - choice: "Yes"
+            image_path: "target.png"
+          - choice: "No"
+            image_path: "thumbsdown.png"
+          - choice: "What is a side hustle?"
+
+
+  - card:
+    title: "Investing | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 5
+    questions:
+      - question: "What is your experience level with investing?"
+        choices: 
+          - choice: "Ask me for advice."
+            image_path: "shades.png"
+          - choice: "Enough"
+            image_path: "money.png"
+          - choice: "Found an advisor"
+            image_path: "confused.png"
+          - choice: "Lost"
+            image_path: "poo.png"
+
+  - card:
+    title: "Shopping | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 6
+    questions:
+      - question: "How do you feel about shopping?"
+        choices: 
+          - choice: "Hot"
+            image_path: "heart.png"
+            microcopy: false
+          - choice: "Bored"
+            image_path: "rock-on.png"
+            microcopy: false
+          - choice: "Troubled"
+            image_path: "crying.png"
+            microcopy: false
+
+  - card:
+    title: "Retirement | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 7
+    questions:
+      - question: "When do you expect to retire?"
+        choices:
+          - choice: "35"
+          - choice: "50"
+          - choice: "60"
+          - choice: "65"
+          - choice: "No plan"
+
+  - card:
+    title: "Income level | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 8
+    questions:
+      - question: "What is your current income level?"
+        choices: 
+          - choice: "20k"
+            image_path: "pray.png"
+            microcopy: false
+          - choice: "30k"
+            image_path: "poo.png"
+            microcopy: false
+          - choice: "50k"
+            image_path: "taco.png"
+            microcopy: false
+          - choice: "75k"
+            image_path: "strong.png"
+            microcopy: false
+          - choice: "100k+"
+            image_path: "money.png"
+            microcopy: false
+
+
+  - card:
+    title: "Age | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 9
+    questions:
+      - question: "What is your age?"
+        choices:
+          - choice: "20"
+          - choice: "30"
+          - choice: "40"
+          - choice: "50"
+          - choice: "60+"
+
+  - card:
+    title: "Credit | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 10
+    questions:
+      - question: "How many credit cards do you use?"
+        choices:
+        - choice: "All of them?"
+          image_path: "heart.png"
+        - choice: "None"
+          image_path: "thumbsdown.png"
+        - choice: "A couple."
+          image_path: "two.png"
+
+  - card:
+    title: "Budgeting | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 11
+    questions:
+      - question: "Do you actively budget?"
+        choices:
+        - choice: "Actively what?"
+          image_path: "clap.png"
+        - choice: "100%"
+          image_path: "confused.png"
+        - choice: "Sometimes"
+          image_path: "dead.png"
+
+  - card:
+    title: "Car | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 12
+    questions:
+      - question: "Do you have a car payment?"
+        choices:
+          - choice: "More than one"
+            image_path: "heart.png"
+          - choice: "Nope"
+            image_path: "thumbsdown.png"
+          - choice: "Yes"
+            image_path: "thumbsup.png"
+
+  - card:
+    title: "Debts | Celebrity Spending"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 13
+    questions:  
+      - question: "Do you have debts besides a car and a home?"
+        choices:
+          - choice: "Yes."
+            image_path: "two.png"
+          - choice: "No."
+            image_path: "clap.png"
+          - choice: "Only student loans."
+            image_path: "school.png"
+
+  - card:
+    title: "Thanks for taking the celebrity spending quiz"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 14
+    sections:
+      - content: "Thanks for taking the quiz!"
+        title: "Thank you."
+      - content: "You're Jeremy Renner. Not bad, friend."
+        title: "Renner"
+        conditions:
+          - condition: "Yo. Word"

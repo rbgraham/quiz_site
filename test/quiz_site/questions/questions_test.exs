@@ -62,4 +62,64 @@ defmodule QuizSite.QuestionsTest do
       assert %Ecto.Changeset{} = Questions.change_choice(choice)
     end
   end
+
+  describe "results" do
+    alias QuizSite.Questions.Result
+
+    @valid_attrs %{question_id: 42}
+    @update_attrs %{question_id: 43}
+    @invalid_attrs %{question_id: nil}
+
+    def result_fixture(attrs \\ %{}) do
+      {:ok, result} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Questions.create_result()
+
+      result
+    end
+
+    test "list_results/0 returns all results" do
+      result = result_fixture()
+      assert Questions.list_results() == [result]
+    end
+
+    test "get_result!/1 returns the result with given id" do
+      result = result_fixture()
+      assert Questions.get_result!(result.id) == result
+    end
+
+    test "create_result/1 with valid data creates a result" do
+      assert {:ok, %Result{} = result} = Questions.create_result(@valid_attrs)
+      assert result.question_id == 42
+    end
+
+    test "create_result/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Questions.create_result(@invalid_attrs)
+    end
+
+    test "update_result/2 with valid data updates the result" do
+      result = result_fixture()
+      assert {:ok, result} = Questions.update_result(result, @update_attrs)
+      assert %Result{} = result
+      assert result.question_id == 43
+    end
+
+    test "update_result/2 with invalid data returns error changeset" do
+      result = result_fixture()
+      assert {:error, %Ecto.Changeset{}} = Questions.update_result(result, @invalid_attrs)
+      assert result == Questions.get_result!(result.id)
+    end
+
+    test "delete_result/1 deletes the result" do
+      result = result_fixture()
+      assert {:ok, %Result{}} = Questions.delete_result(result)
+      assert_raise Ecto.NoResultsError, fn -> Questions.get_result!(result.id) end
+    end
+
+    test "change_result/1 returns a result changeset" do
+      result = result_fixture()
+      assert %Ecto.Changeset{} = Questions.change_result(result)
+    end
+  end
 end
