@@ -12,8 +12,8 @@ config :logger, level: :warn
 # Configure your database
 config :quiz_site, QuizSite.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "rgraham",
+  password: "letmein",
   database: "quiz_site_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

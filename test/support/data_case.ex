@@ -50,4 +50,17 @@ defmodule QuizSite.DataCase do
       end)
     end)
   end
+
+  @doc """
+  Collect the YAML data for the quiz into some data for testing coverage
+  """
+  def load_from_yaml do
+    load_from_yaml(Application.get_env(:quiz_site, :yaml_data_file))
+  end
+
+  def load_from_yaml(filename) do
+    File.cwd! 
+    |> Path.join("priv/repo/#{filename}")
+    |> YamlElixir.read_from_file
+  end
 end

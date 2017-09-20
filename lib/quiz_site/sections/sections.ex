@@ -140,4 +140,12 @@ defmodule QuizSite.Sections do
     |> Repo.insert
   end
 
+  def create_condition_for_section(section, hash) do
+    import Ecto
+    section
+    |> build_assoc(:conditions)
+    |> Condition.changeset(hash)
+    |> Repo.insert!
+  end
+
 end

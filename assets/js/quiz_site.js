@@ -12,12 +12,21 @@ var Cards = {
   section: class Section extends React.Component {
     constructor(props) {
       super(props);
-      this.state = { section: props.section, click: props.click, choices: props.choices }
+      this.state = { 
+        section: props.section,
+        click: props.click,
+        choices: props.choices,
+        score: props.score 
+      }
     }
 
     shouldDisplay() {
       if (this.state.section.conditions.length == 0) {
         return true;
+      } else if (this.scoreSection()) { 
+        console.log("SCORING");
+        var cond = this.state.section.conditions[0];
+        return this.checkScoreCondition(cond);
       } else {
         var conditions = [];
         this.state.section.conditions.forEach((c) => {
@@ -32,6 +41,37 @@ var Cards = {
           return true;
         }
       }
+    }
+
+    scoreSection () {
+      if (this.state.section.conditions.length == 1 && this.scoreCondition(this.state.section.conditions[0])) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    scoreCondition(cond) {
+      if (cond.equal_to || cond.greater_than || cond.less_than) {
+        return true;
+      }
+      return false;
+    }
+
+    checkScoreCondition(cond) {
+      if (cond.equal_to) {
+        return cond.equal_to == this.state.score;
+      }
+
+      var condition = true;
+      if (cond.greater_than) {
+        condition = (cond.greater_than < this.state.score);
+      }
+
+      if (cond.less_than) {
+        condition = condition && (cond.less_than > this.state.score);
+      }
+      return condition;
     }
 
     render() {
@@ -73,7 +113,9 @@ var Cards = {
   choice: function (props) {
     let img = null;
     var display = ( 
-      <button className="btn btn-default choice big-btn" onClick={props.click} value={props.choice.id} data-choice={props.choice.choice}>
+      <button className="btn btn-default choice big-btn" onClick={props.click} 
+        value={props.choice.id} data-choice={props.choice.choice}
+        data-choice-score={props.choice.score}>
         { props.choice.choice }
       </button>
     );
@@ -85,7 +127,9 @@ var Cards = {
         microcopy = props.choice.choice;
       }
       img = (
-          <button className="btn btn-default choice" onClick={props.click} value={props.choice.id} data-choice={props.choice.choice}>
+          <button className="btn btn-default choice" onClick={props.click} 
+            value={props.choice.id} data-choice={props.choice.choice}
+            data-choice-score={props.choice.score}>
             <img src={src} height="100px;" className="center-block"/>
             { microcopy }
           </button>
@@ -148,6 +192,7 @@ class QuizSite extends React.Component {
       cards: [],
       sequence: 1,
       choices: [],
+      score: 0,
       result_id: null,
     };
   }
@@ -184,6 +229,7 @@ class QuizSite extends React.Component {
       seq = this.maxSequence();
     }
 
+    var score = this.state.score;
     var choices = this.state.choices;
     if (e) {
       choices.push(e.currentTarget.getAttribute("data-choice"));
@@ -193,14 +239,21 @@ class QuizSite extends React.Component {
       } else {
         this.initResult(e.currentTarget.value);
       }
+
+      score += this.updatedScore(e);
     }
 
     this.setState({ 
       cards: cards,
       sequence: seq,
       choices: choices,
-      result_id: result_id
+      result_id: result_id,
+      score: score
     });
+  }
+
+  updatedScore(e) {
+    return parseInt(e.currentTarget.getAttribute("data-choice-score"));
   }
 
   storeResultId(result_id) {
@@ -247,6 +300,7 @@ class QuizSite extends React.Component {
 
   render() {
     let card = null;
+    window.w = this;
     if (this.state.cards.length > 0 ) {
       const card = this.getCard();
       var questions = [];
@@ -255,8 +309,9 @@ class QuizSite extends React.Component {
       });
 
       var sections = [];
+      window.sections = sections;
       card.sections.forEach((s) => {
-        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta(card.sequence) } choices={ this.state.choices } />);
+        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta(card.sequence) } choices={ this.state.choices } score={ this.state.score } />);
       });
       const title = card.title + " | Celebrity Financial Twin Quiz";
 

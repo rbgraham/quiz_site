@@ -16,6 +16,7 @@ defmodule QuizSite.DatabaseSeeder do
   alias QuizSite.Cards.Section
   alias QuizSite.Cards.Question
   alias QuizSite.Questions.Choice
+  alias QuizSite.Sections.Condition
 
   def insert_card(card) do
     Card.changeset(%Card{}, card)
@@ -62,6 +63,7 @@ defmodule QuizSite.DatabaseSeeder do
     Repo.delete_all(Question)
     Repo.delete_all(Section)
     Repo.delete_all(Choice)
+    Repo.delete_all(Condition)
   end
 
   def load_from_yaml do

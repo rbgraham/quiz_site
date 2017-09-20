@@ -20,6 +20,7 @@ cards:
         choices: 
           - choice: "Good."
             image_path: "thumbsup.png"
+            score: 15
           - choice: "Bad"
             image_path: "crying.png"
 
@@ -32,9 +33,12 @@ cards:
       - question: "How often do you eat out?"
         choices: 
           - choice: "Daily"
+            score: -5
           - choice: "Weekly"
           - choice: "Monthly"
+            score: 5
           - choice: "Annually"
+            score: 10
 
   - card:
     title: "Day job | Celebrity Spending"
@@ -46,8 +50,10 @@ cards:
         choices:
           - choice: "More than one"
             image_path: "strong.png"
+            score: 15
           - choice: "Yes"
             image_path: "target.png"
+            score: 10
           - choice: "No"
             image_path: "thumbsdown.png"
           - choice: "What is a side hustle?"
@@ -63,10 +69,13 @@ cards:
         choices: 
           - choice: "Ask me for advice."
             image_path: "shades.png"
+            score: 5
           - choice: "Enough"
             image_path: "money.png"
+            score: 10
           - choice: "Found an advisor"
             image_path: "confused.png"
+            score: 5
           - choice: "Lost"
             image_path: "poo.png"
 
@@ -81,12 +90,15 @@ cards:
           - choice: "Hot"
             image_path: "heart.png"
             microcopy: false
+            score: -5
           - choice: "Bored"
             image_path: "rock-on.png"
             microcopy: false
+            score: 5
           - choice: "Troubled"
             image_path: "crying.png"
             microcopy: false
+            score: 10
 
   - card:
     title: "Retirement | Celebrity Spending"
@@ -101,6 +113,9 @@ cards:
           - choice: "60"
           - choice: "65"
           - choice: "No plan"
+            score: -5
+          - choice: "Love what I do"
+            score: 10
 
   - card:
     title: "Income level | Celebrity Spending"
@@ -119,12 +134,15 @@ cards:
           - choice: "50k"
             image_path: "taco.png"
             microcopy: false
+            score: 5
           - choice: "75k"
             image_path: "strong.png"
             microcopy: false
+            score: 10
           - choice: "100k+"
             image_path: "money.png"
             microcopy: false
+            score: 10
 
 
   - card:
@@ -136,8 +154,11 @@ cards:
       - question: "What is your age?"
         choices:
           - choice: "20"
+            score: -5
           - choice: "30"
+            score: 5
           - choice: "40"
+            score: 5
           - choice: "50"
           - choice: "60+"
 
@@ -151,10 +172,13 @@ cards:
         choices:
         - choice: "All of them?"
           image_path: "heart.png"
+          score: -5
         - choice: "None"
           image_path: "thumbsdown.png"
+          score: 10
         - choice: "A couple."
           image_path: "two.png"
+          score: 8
 
   - card:
     title: "Budgeting | Celebrity Spending"
@@ -165,11 +189,13 @@ cards:
       - question: "Do you actively budget?"
         choices:
         - choice: "Actively what?"
-          image_path: "clap.png"
-        - choice: "100%"
           image_path: "confused.png"
+        - choice: "100%"
+          image_path: "clap.png"
+          score: 10
         - choice: "Sometimes"
           image_path: "dead.png"
+          score: 5
 
   - card:
     title: "Car | Celebrity Spending"
@@ -181,8 +207,10 @@ cards:
         choices:
           - choice: "More than one"
             image_path: "heart.png"
+            score: -5
           - choice: "Nope"
             image_path: "thumbsdown.png"
+            score: 5
           - choice: "Yes"
             image_path: "thumbsup.png"
 
@@ -196,10 +224,13 @@ cards:
         choices:
           - choice: "Yes."
             image_path: "two.png"
+            score: -5
           - choice: "No."
             image_path: "clap.png"
+            score: 15
           - choice: "Only student loans."
             image_path: "school.png"
+            score: 5
 
   - card:
     title: "Thanks for taking the celebrity spending quiz"
@@ -207,9 +238,41 @@ cards:
     site: "celeb-quiz"
     sequence: 14
     sections:
-      - content: "Thanks for taking the quiz!"
-        title: "Thank you."
+      - content: "You're MC Hammer. Please don't get too close. It might be contagious."
+        title: "I'm so sorry"
+        conditions:
+          - less_than: 0
+      - content: "You're Mike Tyson. Easy come. Easy go."
+        title: "Good and bad."
+        conditions:
+          - less_than: 20
+            greater_than: 0
+      - content: "You're the Jonas Brothers. Maybe the ones without that solo thing."
+        title: "It could be a lot worse."
+        conditions:
+          - less_than: 35
+            greater_than: 19
       - content: "You're Jeremy Renner. Not bad, friend."
         title: "Renner"
         conditions:
-          - condition: "Yo. Word"
+          - less_than: 45
+            greater_than: 34
+      - content: "You're Robert Downey, Jr. The good second arc."
+        title: "Downey"
+        conditions:
+          - less_than: 60
+            greater_than: 44
+      - content: "You're Matt Damon. We love your work."
+        title: "Damon"
+        conditions:
+          - less_than: 75
+            greater_than: 59
+      - content: "You're Sir Richard Branson. Do work, my friend."
+        title: "Knighted"
+        conditions:
+          - less_than: 85
+            greater_than: 74
+      - content: "Warren Buffet. Welcome to our humble site."
+        title: "The Oracle"
+        conditions:
+          - greater_than: 84

@@ -14,6 +14,7 @@ defmodule QuizSiteWeb.ChoiceView do
     %{id: choice.id,
       image_path: choice.image_path,
       microcopy: choice.microcopy,
-      choice: choice.choice}
+      choice: choice.choice,
+      score: choice.score}
   end
 end

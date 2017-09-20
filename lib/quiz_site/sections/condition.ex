@@ -6,6 +6,9 @@ defmodule QuizSite.Sections.Condition do
 
   schema "conditions" do
     field :condition, :string
+    field :equal_to, :integer
+    field :greater_than, :integer
+    field :less_than, :integer
     belongs_to :section, QuizSite.Cards.Section
     timestamps()
   end
@@ -13,7 +16,7 @@ defmodule QuizSite.Sections.Condition do
   @doc false
   def changeset(%Condition{} = condition, attrs) do
     condition
-    |> cast(attrs, [:condition, :section_id])
-    |> validate_required([:condition, :section_id])
+    |> cast(attrs, [:condition, :section_id, :equal_to, :greater_than, :less_than])
+    |> validate_required([:section_id])
   end
 end
