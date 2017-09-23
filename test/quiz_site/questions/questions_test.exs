@@ -6,7 +6,7 @@ defmodule QuizSite.QuestionsTest do
   describe "choices" do
     alias QuizSite.Questions.Choice
 
-    @valid_attrs %{choice: "some choice"}
+    @valid_attrs %{choice: "some choice", score: 0, microcopy: true}
     @update_attrs %{choice: "some updated choice"}
     @invalid_attrs %{choice: nil}
 
@@ -66,9 +66,9 @@ defmodule QuizSite.QuestionsTest do
   describe "results" do
     alias QuizSite.Questions.Result
 
-    @valid_attrs %{question_id: 42}
-    @update_attrs %{question_id: 43}
-    @invalid_attrs %{question_id: nil}
+    @valid_attrs %{quiz_name: "firebird", completed: false}
+    @update_attrs %{quiz_name: "tbird"}
+    @invalid_attrs %{quiz_name: nil}
 
     def result_fixture(attrs \\ %{}) do
       {:ok, result} =
@@ -91,7 +91,7 @@ defmodule QuizSite.QuestionsTest do
 
     test "create_result/1 with valid data creates a result" do
       assert {:ok, %Result{} = result} = Questions.create_result(@valid_attrs)
-      assert result.question_id == 42
+      assert result.quiz_name == "firebird"
     end
 
     test "create_result/1 with invalid data returns error changeset" do
@@ -102,7 +102,7 @@ defmodule QuizSite.QuestionsTest do
       result = result_fixture()
       assert {:ok, result} = Questions.update_result(result, @update_attrs)
       assert %Result{} = result
-      assert result.question_id == 43
+      assert result.quiz_name == "tbird"
     end
 
     test "update_result/2 with invalid data returns error changeset" do

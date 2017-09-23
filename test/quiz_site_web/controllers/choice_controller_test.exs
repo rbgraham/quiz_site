@@ -32,7 +32,7 @@ defmodule QuizSiteWeb.ChoiceControllerTest do
       conn = get conn, choice_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "choice" => "some choice"}
+        "choice" => "some choice", "image_path" => nil, "microcopy" => true, "score" => 0}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -51,7 +51,7 @@ defmodule QuizSiteWeb.ChoiceControllerTest do
       conn = get conn, choice_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "choice" => "some updated choice"}
+        "choice" => "some updated choice", "image_path" => nil, "microcopy" => true, "score" => 0}
     end
 
     test "renders errors when data is invalid", %{conn: conn, choice: choice} do

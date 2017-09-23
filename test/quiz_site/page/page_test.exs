@@ -6,9 +6,9 @@ defmodule QuizSite.PageTest do
   describe "cards" do
     alias QuizSite.Page.Card
 
-    @valid_attrs %{navigation: "some navigation", title: "some title"}
-    @update_attrs %{navigation: "some updated navigation", title: "some updated title"}
-    @invalid_attrs %{navigation: nil, title: nil}
+    @valid_attrs %{navigation: "some navigation", title: "some title", sequence: 1, site: "quiz"}
+    @update_attrs %{navigation: "some updated navigation", title: "some updated title", sequence: 1, site: "quiz"}
+    @invalid_attrs %{navigation: nil, title: nil, sequence: nil}
 
     def card_fixture(attrs \\ %{}) do
       {:ok, card} =

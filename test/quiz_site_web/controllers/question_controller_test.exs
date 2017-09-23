@@ -33,7 +33,7 @@ defmodule QuizSiteWeb.QuestionControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "question" => "some question",
-        "subtext" => "some subtext"}
+        "subtext" => "some subtext", "card_id" => nil, "choices" => []}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -53,7 +53,7 @@ defmodule QuizSiteWeb.QuestionControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "question" => "some updated question",
-        "subtext" => "some updated subtext"}
+        "subtext" => "some updated subtext", "card_id" => nil, "choices" => []}
     end
 
     test "renders errors when data is invalid", %{conn: conn, question: question} do

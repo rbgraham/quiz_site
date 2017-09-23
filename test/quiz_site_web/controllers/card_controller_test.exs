@@ -4,9 +4,9 @@ defmodule QuizSiteWeb.CardControllerTest do
   alias QuizSite.Page
   alias QuizSite.Page.Card
 
-  @create_attrs %{navigation: "some navigation", title: "some title"}
-  @update_attrs %{navigation: "some updated navigation", title: "some updated title"}
-  @invalid_attrs %{navigation: nil, title: nil}
+  @create_attrs %{navigation: "some navigation", title: "some title", sequence: 1, site: "quiz"}
+  @update_attrs %{navigation: "some updated navigation", title: "some updated title", sequence: 1, site: "quiz"}
+  @invalid_attrs %{navigation: nil, title: nil, sequence: nil, site: nil}
 
   def fixture(:card) do
     {:ok, card} = Page.create_card(@create_attrs)
@@ -33,7 +33,7 @@ defmodule QuizSiteWeb.CardControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "navigation" => "some navigation",
-        "title" => "some title"}
+        "title" => "some title", "questions" => [], "sections" => [], "sequence" => 1, "site" => "quiz"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -53,7 +53,7 @@ defmodule QuizSiteWeb.CardControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "navigation" => "some updated navigation",
-        "title" => "some updated title"}
+        "title" => "some updated title", "questions" => [], "sections" => [], "sequence" => 1, "site" => "quiz"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, card: card} do

@@ -34,7 +34,11 @@ defmodule QuizSiteWeb.SectionControllerTest do
         "id" => id,
         "content" => "some content",
         "cta" => "some cta",
-        "title" => "some title"}
+        "title" => "some title",
+        "card_id" => nil,
+        "conditions" => [],
+        "image_path" => nil
+        }
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -55,7 +59,11 @@ defmodule QuizSiteWeb.SectionControllerTest do
         "id" => id,
         "content" => "some updated content",
         "cta" => "some updated cta",
-        "title" => "some updated title"}
+        "title" => "some updated title",
+        "card_id" => nil,
+        "conditions" => [],
+        "image_path" => nil
+        }
     end
 
     test "renders errors when data is invalid", %{conn: conn, section: section} do

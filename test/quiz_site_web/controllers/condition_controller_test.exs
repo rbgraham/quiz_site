@@ -4,9 +4,9 @@ defmodule QuizSiteWeb.ConditionControllerTest do
   alias QuizSite.Sections
   alias QuizSite.Sections.Condition
 
-  @create_attrs %{condition: "some condition", question_id: 42}
-  @update_attrs %{condition: "some updated condition", question_id: 43}
-  @invalid_attrs %{condition: nil, question_id: nil}
+  @create_attrs %{condition: "some condition", section_id: 42}
+  @update_attrs %{condition: "some updated condition", section_id: 43}
+  @invalid_attrs %{condition: nil, section_id: nil}
 
   def fixture(:condition) do
     {:ok, condition} = Sections.create_condition(@create_attrs)
@@ -32,8 +32,8 @@ defmodule QuizSiteWeb.ConditionControllerTest do
       conn = get conn, condition_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "condition" => "some condition",
-        "question_id" => 42}
+        "condition" => "some condition", "equal_to" => nil, "greater_than" => nil, "less_than" => nil,
+        "section_id" => 42}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -52,8 +52,8 @@ defmodule QuizSiteWeb.ConditionControllerTest do
       conn = get conn, condition_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "condition" => "some updated condition",
-        "question_id" => 43}
+        "condition" => "some updated condition", "equal_to" => nil, "greater_than" => nil, "less_than" => nil,
+        "section_id" => 43}
     end
 
     test "renders errors when data is invalid", %{conn: conn, condition: condition} do

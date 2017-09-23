@@ -6,9 +6,9 @@ defmodule QuizSite.SectionsTest do
   describe "conditions" do
     alias QuizSite.Sections.Condition
 
-    @valid_attrs %{condition: "some condition", question_id: 42}
-    @update_attrs %{condition: "some updated condition", question_id: 43}
-    @invalid_attrs %{condition: nil, question_id: nil}
+    @valid_attrs %{condition: "some condition", section_id: 42}
+    @update_attrs %{condition: "some updated condition", section_id: 43}
+    @invalid_attrs %{condition: nil, section_id: nil}
 
     def condition_fixture(attrs \\ %{}) do
       {:ok, condition} =
@@ -32,7 +32,7 @@ defmodule QuizSite.SectionsTest do
     test "create_condition/1 with valid data creates a condition" do
       assert {:ok, %Condition{} = condition} = Sections.create_condition(@valid_attrs)
       assert condition.condition == "some condition"
-      assert condition.question_id == 42
+      assert condition.section_id == 42
     end
 
     test "create_condition/1 with invalid data returns error changeset" do
@@ -44,7 +44,7 @@ defmodule QuizSite.SectionsTest do
       assert {:ok, condition} = Sections.update_condition(condition, @update_attrs)
       assert %Condition{} = condition
       assert condition.condition == "some updated condition"
-      assert condition.question_id == 43
+      assert condition.section_id == 43
     end
 
     test "update_condition/2 with invalid data returns error changeset" do

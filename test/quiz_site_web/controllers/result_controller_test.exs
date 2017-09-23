@@ -4,9 +4,9 @@ defmodule QuizSiteWeb.ResultControllerTest do
   alias QuizSite.Questions
   alias QuizSite.Questions.Result
 
-  @create_attrs %{question_id: 42}
-  @update_attrs %{question_id: 43}
-  @invalid_attrs %{question_id: nil}
+  @create_attrs %{quiz_name: "firebird"}
+  @update_attrs %{quiz_name: "tbird"}
+  @invalid_attrs %{quiz_name: nil}
 
   def fixture(:result) do
     {:ok, result} = Questions.create_result(@create_attrs)
@@ -32,7 +32,7 @@ defmodule QuizSiteWeb.ResultControllerTest do
       conn = get conn, result_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "question_id" => 42}
+        "quiz_name" => "firebird"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -51,7 +51,7 @@ defmodule QuizSiteWeb.ResultControllerTest do
       conn = get conn, result_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "question_id" => 43}
+        "quiz_name" => "tbird"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, result: result} do
