@@ -4,8 +4,8 @@ defmodule QuizSiteWeb.SectionControllerTest do
   alias QuizSite.Cards
   alias QuizSite.Cards.Section
 
-  @create_attrs %{content: "some content", cta: "some cta", title: "some title"}
-  @update_attrs %{content: "some updated content", cta: "some updated cta", title: "some updated title"}
+  @create_attrs %{content: "some content", cta: "some cta", title: "some title", image_width: "125px"}
+  @update_attrs %{content: "some updated content", cta: "some updated cta", title: "some updated title", image_width: "125px"}
   @invalid_attrs %{content: nil, cta: nil, title: nil}
 
   def fixture(:section) do
@@ -37,7 +37,7 @@ defmodule QuizSiteWeb.SectionControllerTest do
         "title" => "some title",
         "card_id" => nil,
         "conditions" => [],
-        "image_path" => nil
+        "image_path" => nil, "image_width" => "125px"
         }
     end
 
@@ -62,7 +62,8 @@ defmodule QuizSiteWeb.SectionControllerTest do
         "title" => "some updated title",
         "card_id" => nil,
         "conditions" => [],
-        "image_path" => nil
+        "image_path" => nil,
+        "image_width" => "125px"
         }
     end
 

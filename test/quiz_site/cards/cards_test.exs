@@ -6,7 +6,7 @@ defmodule QuizSite.CardsTest do
   describe "sections" do
     alias QuizSite.Cards.Section
 
-    @valid_attrs %{content: "some content", cta: "some cta", title: "some title"}
+    @valid_attrs %{content: "some content", cta: "some cta", title: "some title", image_width: "125px"}
     @update_attrs %{content: "some updated content", cta: "some updated cta", title: "some updated title"}
     @invalid_attrs %{content: nil, cta: nil, title: nil}
 
