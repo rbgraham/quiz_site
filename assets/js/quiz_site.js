@@ -16,7 +16,8 @@ var Cards = {
         section: props.section,
         click: props.click,
         choices: props.choices,
-        score: props.score 
+        score: props.score,
+        drip_id: props.drip_id
       }
     }
 
@@ -24,7 +25,6 @@ var Cards = {
       if (this.state.section.conditions.length == 0) {
         return true;
       } else if (this.scoreSection()) { 
-        console.log("SCORING");
         var cond = this.state.section.conditions[0];
         return this.checkScoreCondition(cond);
       } else {
@@ -74,6 +74,10 @@ var Cards = {
       return condition;
     }
 
+    emailForm(props) {
+      return Cards.emailForm(props);
+    }
+
     render() {
       let cta = null;
       if (this.state.section.cta) {
@@ -84,7 +88,7 @@ var Cards = {
       if (this.state.section.image_path) {
         const src = Cards.image_path(this.state.section.image_path);
         img = (
-          <img src={src} width="125px" className="center-block" />
+          <img src={src} width={ this.state.section.image_width } className="center-block" />
         );
       }
 
@@ -102,12 +106,34 @@ var Cards = {
           </div>
       );
 
-      if (this.shouldDisplay()) {
+      if (this.shouldDisplay() && !this.state.section.email_form) {
         return rendered;
+      } else if (this.shouldDisplay() && this.state.section.email_form) {
+        return this.emailForm(this.state);
       } else {
         return Cards.blank();
       }
     }
+  },
+
+  emailForm: function (props) {
+    const drip_form_url = "https://www.getdrip.com/forms/" + props.drip_id + "/submissions";
+    var form = (
+    <div className="text-center form-group col-md-6 col-md-offset-3">
+      <form action={ drip_form_url } method="post" data-drip-embedded-form={ props.drip_id }>
+        <h3 data-drip-attribute="headline">{ props.section.title }</h3>
+        <div data-drip-attribute="description">{ props.section.content }</div>
+          <div>
+              <label for="drip-email"></label><br />
+              <input className="form-control" type="email" id="drip-email" name="fields[email]" placeholder="you@domain.com"/>
+          </div>
+        <div>
+          <input className="btn btn-warning btn-large h4" type="submit" name="submit" value={ props.section.cta } data-drip-attribute="sign-up-button" />
+        </div>
+      </form>
+    </div>
+    );
+    return form;
   },
     
   choice: function (props) {
@@ -300,7 +326,6 @@ class QuizSite extends React.Component {
 
   render() {
     let card = null;
-    window.w = this;
     if (this.state.cards.length > 0 ) {
       const card = this.getCard();
       var questions = [];
@@ -309,9 +334,8 @@ class QuizSite extends React.Component {
       });
 
       var sections = [];
-      window.sections = sections;
       card.sections.forEach((s) => {
-        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta(card.sequence) } choices={ this.state.choices } score={ this.state.score } />);
+        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta(card.sequence) } choices={ this.state.choices } score={ this.state.score } drip_id={ card.drip_id } />);
       });
       const title = card.title + " | Celebrity Financial Twin Quiz";
 

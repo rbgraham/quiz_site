@@ -16,6 +16,7 @@ defmodule QuizSiteWeb.CardView do
     %{id: card.id,
       navigation: card.navigation,
       sequence: card.sequence,
+      drip_id: Application.get_env(:quiz_site, :drip_id),
       site: card.site,
       title: card.title,
       questions: render_many(card.questions, QuizSiteWeb.QuestionView, "question.json"),

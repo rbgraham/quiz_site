@@ -292,3 +292,7 @@ cards:
         image_width: "450px"
         conditions:
           - greater_than: 84
+      - content: "We'll send you a detailed report that can help you move to the next level"
+        title: "Get a complete report with advice and projections"
+        cta: "Collect your full report!"
+        email_form: true

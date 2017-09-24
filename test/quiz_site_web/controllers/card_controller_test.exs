@@ -33,7 +33,7 @@ defmodule QuizSiteWeb.CardControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "navigation" => "some navigation",
-        "title" => "some title", "questions" => [], "sections" => [], "sequence" => 1, "site" => "quiz"}
+        "title" => "some title", "questions" => [], "sections" => [], "sequence" => 1, "site" => "quiz", "drip_id" => nil}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -53,7 +53,7 @@ defmodule QuizSiteWeb.CardControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "navigation" => "some updated navigation",
-        "title" => "some updated title", "questions" => [], "sections" => [], "sequence" => 1, "site" => "quiz"}
+        "title" => "some updated title", "questions" => [], "sections" => [], "sequence" => 1, "site" => "quiz", "drip_id" => nil}
     end
 
     test "renders errors when data is invalid", %{conn: conn, card: card} do
