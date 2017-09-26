@@ -11,9 +11,7 @@ defmodule QuizSiteWeb.PageController do
 
     client = get_oauth_client()
     
-    url = """
-    https://www.getdrip.com/oauth/token?response_type=token&client_id=#{client.client_id}&client_secret=#{client.client_secret}&code=#{code}&redirect_uri=#{URI.encode_www_form(client.redirect_uri)}&grant_type=authorization_code
-    """
+    url = "https://www.getdrip.com/oauth/token?response_type=token&client_id=#{client.client_id}&client_secret=#{client.client_secret}&code=#{code}&redirect_uri=#{URI.encode_www_form(client.redirect_uri)}&grant_type=authorization_code"
     case HTTPoison.post(url, "", [{"Content-Type", "application/json"}]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> 
         %{ "access_token" => token } = Poison.decode!(body)
