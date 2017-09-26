@@ -56,3 +56,6 @@ config :quiz_site, QuizSite.Repo,
   database: "quiz_site_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :quiz_site,
+  drip_id: 16384881

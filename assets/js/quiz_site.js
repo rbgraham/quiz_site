@@ -17,6 +17,7 @@ var Cards = {
         click: props.click,
         choices: props.choices,
         score: props.score,
+        emailClick: props.emailClick,
         drip_id: props.drip_id
       }
     }
@@ -117,20 +118,22 @@ var Cards = {
   },
 
   emailForm: function (props) {
-    const drip_form_url = "https://www.getdrip.com/forms/" + props.drip_id + "/submissions";
     var form = (
     <div className="text-center form-group col-md-6 col-md-offset-3">
-      <form action={ drip_form_url } method="post" data-drip-embedded-form={ props.drip_id }>
-        <h3 data-drip-attribute="headline">{ props.section.title }</h3>
-        <div data-drip-attribute="description">{ props.section.content }</div>
-          <div>
-              <label for="drip-email"></label><br />
-              <input className="form-control" type="email" id="drip-email" name="fields[email]" placeholder="you@domain.com"/>
-          </div>
+      <h3 data-drip-attribute="headline">{ props.section.title }</h3>
+      <div data-drip-attribute="description">{ props.section.content }</div>
         <div>
-          <input className="btn btn-warning btn-large h4" type="submit" name="submit" value={ props.section.cta } data-drip-attribute="sign-up-button" />
+            <input className="form-control" type="email" id="drip-email" name="fields[email]" placeholder="you@domain.com"/>
         </div>
-      </form>
+      <div>
+        <button className="btn btn-warning btn-large h4"
+          type="submit" name="submit"
+          data-drip-attribute="sign-up-button"
+          data-choice="full-report"
+          onClick={ props.emailClick }>
+          { props.section.cta }
+        </button>
+      </div>
     </div>
     );
     return form;
@@ -278,6 +281,25 @@ class QuizSite extends React.Component {
     });
   }
 
+  postEmailToDrip(e) {
+    if (e) {
+      const drip_form_url = "https://www.getdrip.com/forms/" + this.getCard().drip_id + "/submissions";
+      var email = document.getElementById("drip-email");
+      var _this = this;
+      var dripEmailRequest =
+        axios
+          .post(drip_form_url, qs.stringify({ "fields[email]": email.getAttribute("value") }))
+          .then((result) => {
+            // TODO This null means that we don't track the email submission
+            // because we are storing choice_ids here and not a string or similar
+            // this is worth tracking, however, I should migrate the result object
+            // to that end
+            _this.advance(_this.state.sequence, _this.state.cards, null);
+            console.log("POSTed and advance attempted");
+          });
+    }
+  }
+
   updatedScore(e) {
     return parseInt(e.currentTarget.getAttribute("data-choice-score"));
   }
@@ -288,6 +310,10 @@ class QuizSite extends React.Component {
 
   sectionCta(sequence) {
     return () => this.advance(this.state.sequence, this.state.cards, null);
+  }
+
+  sectionEmailForm() {
+    return (e) => this.postEmailToDrip(e);
   }
 
   questionCta() {
@@ -304,7 +330,7 @@ class QuizSite extends React.Component {
           result_id = result.data.data.id;
           _this.storeResultId(result_id);
           _this.storeResponse(result_id, choice_id);
-        })
+        });
   }
 
   storeResponse(result_id, choice_id) {
@@ -335,7 +361,12 @@ class QuizSite extends React.Component {
 
       var sections = [];
       card.sections.forEach((s) => {
-        sections.push(<Cards.section key={ s.id } section={ s } click={ this.sectionCta(card.sequence) } choices={ this.state.choices } score={ this.state.score } drip_id={ card.drip_id } />);
+        sections.push(<Cards.section key={ s.id } section={ s }
+                      click={ this.sectionCta(card.sequence) }
+                      emailClick={ this.sectionEmailForm() }
+                      choices={ this.state.choices }
+                      score={ this.state.score }
+                      drip_id={ card.drip_id } />);
       });
       const title = card.title + " | Celebrity Financial Twin Quiz";
 
