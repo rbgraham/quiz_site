@@ -12,13 +12,16 @@ defmodule QuizSiteWeb.PageController do
     client = get_oauth_client()
     
     url = """
-    https://www.getdrip.com/oauth/token?response_type=token&client_id=#{client.client_id}&client_secret=#{client.client_secret}&code=#{code}&redirect_uri=#{URI.encode(client.redirect_uri)}&grant_type=authorization_code
+    https://www.getdrip.com/oauth/token?response_type=token&client_id=#{client.client_id}&client_secret=#{client.client_secret}&code=#{code}&redirect_uri=#{URI.encode_www_form(client.redirect_uri)}&grant_type=authorization_code
     """
     case HTTPoison.post(url, "", [{"Content-Type", "application/json"}]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> 
         %{ "access_token" => token } = Poison.decode!(body)
         QuizSite.Auth.insert_drip_token(token)
-      {:error, %HTTPoison.Error{reason: reason}} -> Logger.error "Failed to get OAuth token at #{url} for #{inspect(reason)}"
+      {:ok, %HTTPoison.Response{status_code: 502, request_url: url}} ->
+        Logger.error "Failed to get OAuth token. 502 error at #{inspect(url)}}"
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error "Failed to get OAuth token at #{url} for #{inspect(reason)}"
     end
 
     redirect conn, to: "/"
