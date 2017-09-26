@@ -20,7 +20,7 @@ defmodule QuizSite.Mixfile do
   def application do
     [
       mod: {QuizSite.Application, []},
-      extra_applications: [:logger, :runtime_tools, :yaml_elixir]
+      extra_applications: [:logger, :runtime_tools, :yaml_elixir, :oauth2]
     ]
   end
 
@@ -41,7 +41,8 @@ defmodule QuizSite.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:yaml_elixir, "~> 1.3.1"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:oauth2, "~> 0.9"}
     ]
   end
 

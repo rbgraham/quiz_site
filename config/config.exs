@@ -30,6 +30,7 @@ config :quiz_site,
   page_title_suffix: "Celebrity Financial Twin Quiz",
   yaml_data_file: "celeb-site.yml"
 
+config :oauth2, debug: true
 
 config :mime, :types, %{
            "application/json" => ["json"]

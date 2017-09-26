@@ -1,5 +1,6 @@
 import axios from "axios"
 import React from "react"
+
 var qs = require('qs');
 
 var Cards = { 
@@ -366,7 +367,8 @@ class QuizSite extends React.Component {
                       emailClick={ this.sectionEmailForm() }
                       choices={ this.state.choices }
                       score={ this.state.score }
-                      drip_id={ card.drip_id } />);
+                      drip_id={ card.drip_id }
+                      />);
       });
       const title = card.title + " | Celebrity Financial Twin Quiz";
 
