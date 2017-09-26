@@ -66,3 +66,8 @@ config :quiz_site, QuizSite.Repo,
   url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
+
+config :quiz_site,
+  drip_id: System.get_env("drip_id"),
+  drip_client_id: System.get_env("drip_client_id"),
+  drip_client_secret: System.get_env("drip_client_secret")
