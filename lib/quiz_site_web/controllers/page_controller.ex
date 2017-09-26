@@ -7,29 +7,28 @@ defmodule QuizSiteWeb.PageController do
 
   def drip_callback(conn, %{"code" => code}) do
     require Logger
-    
+    alias QuizSite.Auth.Drip
+
     client = get_oauth_client()
-
-    Logger.warn "Client for request #{inspect(client)}"
-    # Use the authorization code returned from the provider to obtain an access token.
-    token = OAuth2.Client.get_token!(client, code: code)
-
-    Logger.warn "OAuth2 client token: #{inspect(token)}"
-    # Use the access token to make a request for resources
-    #resource = OAuth2.Client.get!(client, "/api/resource").body
+    
+    url = """
+    https://www.getdrip.com/oauth/token?response_type=token&client_id=#{client.client_id}&client_secret=#{client.client_secret}&code=#{code}&redirect_uri=#{client.redirect_uri}&grant_type=authorization_code
+    """
+    case HTTPoison.post(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> 
+        %{ "access_token" => token } = Poison.decode!(body)
+        QuizSite.Auth.insert_drip_token(token)
+      {:error, %HTTPoison.Error{reason: reason}} -> Logger.error "Failed to get OAuth token at #{url} for #{inspect(reason)}"
+    end
 
     redirect conn, to: "/"
   end
 
   def drip_auth_init(conn, _params) do
     require Logger
-    # Initialize a client with client_id, client_secret, site, and redirect_uri.
-    # The strategy option is optional as it defaults to `OAuth2.Strategy.AuthCode`.
-
     client = get_oauth_client()
     # Generate the authorization URL and redirect the user to the provider.
     url = OAuth2.Client.authorize_url!(client)
-    # => "https://auth.example.com/oauth/authorize?client_id=client_id&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fcallback&response_type=code"
 
     redirect conn, external: url
   end
