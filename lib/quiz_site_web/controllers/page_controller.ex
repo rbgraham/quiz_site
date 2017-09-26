@@ -32,7 +32,7 @@ defmodule QuizSiteWeb.PageController do
     # => "https://auth.example.com/oauth/authorize?client_id=client_id&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fcallback&response_type=code"
 
     Logger.debug "redirecting to #{inspect(url)}"
-    Logger.debug "return url: #{Application.get_env(:my_app, MyApp.Endpoint)[:url][:host]}/drip/callback"
+    Logger.debug "return url: #{Application.get_env(:my_app, QuizSiteWeb.Endpoint)[:url][:host]}/drip/callback"
     redirect conn, external: url
   end
 
@@ -44,7 +44,7 @@ defmodule QuizSiteWeb.PageController do
       site: "https://api.getdrip.com/v2/",
       authorize_url: "https://www.getdrip.com/oauth/authorize",
       token_url: "https://www.getdrip.com/oauth/token",
-      redirect_uri: "#{Application.get_env(:my_app, MyApp.Endpoint)[:url][:host]}/drip/callback"
+      redirect_uri: "#{Application.get_env(:quiz_site, QuizSiteWeb.Endpoint)[:url][:host]}/drip/callback"
     ])
   end
 end
