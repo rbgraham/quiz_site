@@ -5,15 +5,15 @@ defmodule QuizSiteWeb.PageController do
     render conn, "index.html", csrf_token: get_csrf_token()
   end
 
-  def drip_callback(conn, _params) do
+  def drip_callback(conn, params) do
     require Logger
     
     client = get_oauth_client()
 
     # Use the authorization code returned from the provider to obtain an access token.
-    client = OAuth2.Client.get_token!(client, code: "someauthcode")
+    token = OAuth2.Client.get_token!(client, code: params[:code])
 
-    Logger.info "OAuth2 client token: #{inspect(client)}"
+    Logger.info "OAuth2 client token: #{inspect(token)}"
     # Use the access token to make a request for resources
     #resource = OAuth2.Client.get!(client, "/api/resource").body
 
