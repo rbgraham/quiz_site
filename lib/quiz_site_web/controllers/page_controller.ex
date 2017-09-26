@@ -10,6 +10,7 @@ defmodule QuizSiteWeb.PageController do
     
     client = get_oauth_client()
 
+    Logger.info "Client for request #{inspect(client)}"
     # Use the authorization code returned from the provider to obtain an access token.
     token = OAuth2.Client.get_token!(client, code: code)
 
