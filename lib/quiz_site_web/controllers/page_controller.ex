@@ -44,7 +44,7 @@ defmodule QuizSiteWeb.PageController do
       site: "https://api.getdrip.com/v2/",
       authorize_url: "https://www.getdrip.com/oauth/authorize",
       token_url: "https://www.getdrip.com/oauth/token",
-      redirect_uri: "//#{Application.get_env(:quiz_site, QuizSiteWeb.Endpoint)[:url][:host]}/drip/callback"
+      redirect_uri: "#{Application.get_env(:quiz_site, QuizSiteWeb.Endpoint)[:url][:scheme]}://#{Application.get_env(:quiz_site, QuizSiteWeb.Endpoint)[:url][:host]}/drip/callback"
     ])
   end
 end

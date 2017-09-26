@@ -11,7 +11,7 @@ config :quiz_site,
 
 # Configures the endpoint
 config :quiz_site, QuizSiteWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [scheme: "http", host: "localhost"],
   secret_key_base: "bnyYSMFISETKVSqkY58yMkNEy3frGKfZzHLiA4hqS3i1dCEZxfB7mTc88ZOY/OBc",
   render_errors: [view: QuizSiteWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: QuizSite.PubSub,
