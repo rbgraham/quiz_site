@@ -57,5 +57,4 @@ config :quiz_site, QuizSite.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :quiz_site,
-  drip_id: 16384881
+import_config "dev.secret.exs"
