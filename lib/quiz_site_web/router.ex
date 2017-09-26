@@ -14,7 +14,7 @@ defmodule QuizSiteWeb.Router do
 
     get "/", PageController, :index
     get "/drip/auth", PageController, :drip_auth_init
-    post "/drip/callback", PageController, :drip_callback
+    get "/drip/callback", PageController, :drip_callback
     resources "/sections", SectionController, except: [:new, :edit]
     resources "/choices", ChoiceController, except: [:new, :edit]
     resources "/questions", QuestionController, except: [:new, :edit]
