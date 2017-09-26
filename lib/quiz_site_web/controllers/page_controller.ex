@@ -14,7 +14,7 @@ defmodule QuizSiteWeb.PageController do
     url = """
     https://www.getdrip.com/oauth/token?response_type=token&client_id=#{client.client_id}&client_secret=#{client.client_secret}&code=#{code}&redirect_uri=#{client.redirect_uri}&grant_type=authorization_code
     """
-    case HTTPoison.post(url) do
+    case HTTPoison.post(url, "", [{"Content-Type", "application/json"}]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> 
         %{ "access_token" => token } = Poison.decode!(body)
         QuizSite.Auth.insert_drip_token(token)
