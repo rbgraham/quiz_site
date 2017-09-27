@@ -7,8 +7,6 @@ defmodule QuizSiteWeb.PageController do
 
   def drip_callback(conn, %{"code" => code}) do
     require Logger
-    alias QuizSite.Auth.Drip
-
     client = get_oauth_client()
     
     url = "https://www.getdrip.com/oauth/token?response_type=token&client_id=#{client.client_id}&client_secret=#{client.client_secret}&code=#{code}&redirect_uri=#{URI.encode_www_form(client.redirect_uri)}&grant_type=authorization_code"
@@ -39,16 +37,18 @@ defmodule QuizSiteWeb.PageController do
     Logger.info "Attempting to subscribe #{inspect(email)}"
 
     create_drip_subscriber(email, quiz_name, score)
+
+    send_resp(conn, :no_content, "")
   end
 
   defp create_drip_subscriber(email, quiz_name, score) do
     require Logger
 
     token = QuizSite.Auth.get_drip_token
-    subscriber = {
-      "subscribers": [{
+    subscriber = %{
+      "subscribers": [%{
         "email": email,
-        "custom_fields": {
+        "custom_fields": %{
           "quiz_name": quiz_name,
           "score": score
         }
@@ -57,22 +57,22 @@ defmodule QuizSiteWeb.PageController do
     url = drip_api_url("subscribers") 
     case HTTPoison.post(url, subscriber, [{"Content-Type", "applciation/json"}, "Authorization": "Bearer #{token}"]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        Logger.info "Inserted subscriber to Drip: #{inspect(email)}"
-        send_drip_event(body, email)
+        Logger.info "Inserted subscriber to Drip: #{inspect(email)} #{inspect(body)}"
+        send_drip_event(email, quiz_name, score)
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error "Failed to submit new subscriber to Drip: #{inspect(reason)}"
     end
   end
 
-  defp send_drip_event(email, quiz_name, score)
+  defp send_drip_event(email, quiz_name, score) do
     require Logger
 
     token = QuizSite.Auth.get_drip_token
-    event = {
-      "events": [{
+    event = %{
+      "events": [%{
         "email": email,
         "action": "Completed quiz",
-        "properties": {
+        "properties": %{
           "quiz_name": quiz_name,
           "score": score
         },
@@ -80,7 +80,7 @@ defmodule QuizSiteWeb.PageController do
       }]
     }
     url = drip_api_url("events")
-    case HTTPoison.post(url, subscriber, [{"Content-Type", "applciation/json"}, "Authorization": "Bearer #{token}"]) do
+    case HTTPoison.post(url, event, [{"Content-Type", "applciation/json"}, "Authorization": "Bearer #{token}"]) do
       {:ok, %HTTPoison.Response{status_code: 204}} ->
         Logger.info "Sent event to Drip: #{inspect(email)}"
       {:error, %HTTPoison.Error{reason: reason}} ->
