@@ -11,8 +11,13 @@ defmodule QuizSite.Auth do
   @doc """
   Returns the latest of token.
   """
-  def get_token do
-    Repo.first(Drip)
+  def get_drip_token do
+    q = from d in Drip,
+      where: d.app == "drip",
+      order_by: [desc: d.id],
+      limit: 1,
+      select: d.token
+    Repo.one(q)
   end
 
   @doc """

@@ -34,6 +34,64 @@ defmodule QuizSiteWeb.PageController do
     redirect conn, external: url
   end
 
+  def drip_subscribe(conn, %{"email" => email, "quiz_name" => quiz_name, "score" => score}) do
+    require Logger
+    Logger.info "Attempting to subscribe #{inspect(email)}"
+
+    create_drip_subscriber(email, quiz_name, score)
+  end
+
+  defp create_drip_subscriber(email, quiz_name, score) do
+    require Logger
+
+    token = QuizSite.Auth.get_drip_token
+    subscriber = {
+      "subscribers": [{
+        "email": email,
+        "custom_fields": {
+          "quiz_name": quiz_name,
+          "score": score
+        }
+      }]
+    }
+    url = drip_api_url("subscribers") 
+    case HTTPoison.post(url, subscriber, [{"Content-Type", "applciation/json"}, "Authorization": "Bearer #{token}"]) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        Logger.info "Inserted subscriber to Drip: #{inspect(email)}"
+        send_drip_event(body, email)
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error "Failed to submit new subscriber to Drip: #{inspect(reason)}"
+    end
+  end
+
+  defp send_drip_event(email, quiz_name, score)
+    require Logger
+
+    token = QuizSite.Auth.get_drip_token
+    event = {
+      "events": [{
+        "email": email,
+        "action": "Completed quiz",
+        "properties": {
+          "quiz_name": quiz_name,
+          "score": score
+        },
+        "occurred_at": DateTime.utc_now
+      }]
+    }
+    url = drip_api_url("events")
+    case HTTPoison.post(url, subscriber, [{"Content-Type", "applciation/json"}, "Authorization": "Bearer #{token}"]) do
+      {:ok, %HTTPoison.Response{status_code: 204}} ->
+        Logger.info "Sent event to Drip: #{inspect(email)}"
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error "Failed to submit new event to Drip: #{inspect(reason)}"
+    end
+  end
+
+  defp drip_api_url(suffix) do
+    "https://api.getdrip.com/v2/#{Application.get_env(:quiz_site, :drip_id)}/#{suffix}"
+  end
+
   defp get_oauth_client() do
     OAuth2.Client.new([
       strategy: OAuth2.Strategy.AuthCode, #default
