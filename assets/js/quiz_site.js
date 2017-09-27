@@ -284,12 +284,14 @@ class QuizSite extends React.Component {
 
   postEmailToDrip(e) {
     if (e) {
-      const drip_form_url = "https://www.getdrip.com/forms/" + this.getCard().drip_id + "/submissions";
+      const drip_form_url = "/drip/subscribe";
       var email = document.getElementById("drip-email");
+      var quiz_name = this.getCard().site;
+      var score = this.state.score;
       var _this = this;
       var dripEmailRequest =
         axios
-          .post(drip_form_url, qs.stringify({ "fields[email]": email.getAttribute("value") }))
+          .post(drip_form_url, qs.stringify({ "email": email.getAttribute("value"), "score": score, "quiz_name": quiz_name }))
           .then((result) => {
             // TODO This null means that we don't track the email submission
             // because we are storing choice_ids here and not a string or similar
