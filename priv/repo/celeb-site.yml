@@ -292,7 +292,7 @@ cards:
         image_width: "450px"
         conditions:
           - greater_than: 84
-      - content: "Every celebrity spending patterns has advantages and downsides. We want to help you take your financial habits to the next level. Grab this free report to get started."
+      - content: "Every celebrity spending pattern has advantages and downsides. We want to help you take your financial habits to the next level. Grab this free report to get started."
         title: "Get a complete report with advice and projections"
         cta: "Collect your full report!"
         email_form: true
