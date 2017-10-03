@@ -82,7 +82,15 @@ var Cards = {
 
     render() {
       let cta = null;
-      if (this.state.section.cta) {
+      if (this.state.section.cta && this.state.section.cta == "Share") {
+        # TODO This isn't quite right. The button doesn't show properly and
+        # the way this is configured I need a data model for the tweet text.
+        #cta = (
+        #  <a className="twitter-share-button"
+        #    href="https://twitter.com/intent/tweet?text=Who%20is%20your%20financial%20celeb?" data-size="large">
+        #  Tweet</a>
+        #);
+      } else if (this.state.section.cta) {
         cta = <button className="btn btn-warning btn-large h4" onClick={ this.state.click }>{ this.state.section.cta }</button>;
       }
 
@@ -248,6 +256,10 @@ class QuizSite extends React.Component {
                                  { return elem.sequence === this.state.sequence; });
   }
 
+  onLastCard() {
+    return this.state.sequence == this.maxSequence;
+  }
+
   maxSequence() {
     return Math.max(...this.state.cards.map((elem) => { return elem.sequence }));
   }
@@ -288,10 +300,11 @@ class QuizSite extends React.Component {
       var email = document.getElementById("drip-email");
       var quiz_name = this.getCard().site;
       var score = this.state.score;
+      var result_id = this.state.result_id;
       var _this = this;
       var dripEmailRequest =
         axios
-          .post(drip_form_url, qs.stringify({ "email": email.value, "score": score, "quiz_name": quiz_name }))
+          .post(drip_form_url, qs.stringify({ "email": email.value, "score": score, "quiz_name": quiz_name, result_id: result_id, _csrf_token: this.csrfToken() }))
           .then((result) => {
             // TODO This null means that we don't track the email submission
             // because we are storing choice_ids here and not a string or similar
@@ -357,6 +370,7 @@ class QuizSite extends React.Component {
     let card = null;
     if (this.state.cards.length > 0 ) {
       const card = this.getCard();
+      var last = this.onLastCard();
       var questions = [];
       card.questions.forEach((q) => {
         questions.push(<Cards.question key={ q.id } question={ q } click={ this.questionCta() }/>);  
@@ -370,6 +384,7 @@ class QuizSite extends React.Component {
                       choices={ this.state.choices }
                       score={ this.state.score }
                       drip_id={ card.drip_id }
+                      last={ last }
                       />);
       });
       const title = card.title + " | Celebrity Financial Twin Quiz";

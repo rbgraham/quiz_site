@@ -32,16 +32,16 @@ defmodule QuizSiteWeb.PageController do
     redirect conn, external: url
   end
 
-  def drip_subscribe(conn, %{"email" => email, "quiz_name" => quiz_name, "score" => score}) do
+  def drip_subscribe(conn, %{"email" => email, "quiz_name" => quiz_name, "score" => score, "result_id" => result_id}) do
     require Logger
     Logger.info "Attempting to subscribe #{inspect(email)}"
 
-    create_drip_subscriber(email, quiz_name, score)
+    create_drip_subscriber(email, quiz_name, score, result_id)
 
     send_resp(conn, :no_content, "")
   end
 
-  defp create_drip_subscriber(email, quiz_name, score) do
+  defp create_drip_subscriber(email, quiz_name, score, result_id) do
     require Logger
 
     token = QuizSite.Auth.get_drip_token
@@ -50,21 +50,22 @@ defmodule QuizSiteWeb.PageController do
         "email": email,
         "custom_fields": %{
           "quiz_name": quiz_name,
-          "score": score
+          "score": score,
+          "quiz_result_id": result_id
         }
       }]
     }
     url = drip_api_url("subscribers") 
-    case HTTPoison.post(url, subscriber, [{"Content-Type", "applciation/json"}, "Authorization": "Bearer #{token}"]) do
+    case HTTPoison.post(url, Poison.encode!(subscriber), [{"Content-Type", "application/vnd.api+json"}, {"Authorization", "Bearer #{token}"}]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         Logger.info "Inserted subscriber to Drip: #{inspect(email)} #{inspect(body)}"
-        send_drip_event(email, quiz_name, score)
+        send_drip_event(email, quiz_name, score, result_id)
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error "Failed to submit new subscriber to Drip: #{inspect(reason)}"
     end
   end
 
-  defp send_drip_event(email, quiz_name, score) do
+  defp send_drip_event(email, quiz_name, score, result_id) do
     require Logger
 
     token = QuizSite.Auth.get_drip_token
@@ -74,13 +75,13 @@ defmodule QuizSiteWeb.PageController do
         "action": "Completed quiz",
         "properties": %{
           "quiz_name": quiz_name,
-          "score": score
+          "score": score,
         },
         "occurred_at": DateTime.utc_now
       }]
     }
     url = drip_api_url("events")
-    case HTTPoison.post(url, event, [{"Content-Type", "applciation/json"}, "Authorization": "Bearer #{token}"]) do
+    case HTTPoison.post(url, Poison.encode!(event), [{"Content-Type", "application/vnd.api+json"}, {"Authorization", "Bearer #{token}"}]) do
       {:ok, %HTTPoison.Response{status_code: 204}} ->
         Logger.info "Sent event to Drip: #{inspect(email)}"
       {:error, %HTTPoison.Error{reason: reason}} ->
