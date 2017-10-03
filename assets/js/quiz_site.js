@@ -311,7 +311,6 @@ class QuizSite extends React.Component {
             // this is worth tracking, however, I should migrate the result object
             // to that end
             _this.advance(_this.state.sequence, _this.state.cards, null);
-            console.log("POSTed and advance attempted");
           });
     }
   }
