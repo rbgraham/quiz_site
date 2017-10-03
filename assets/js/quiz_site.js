@@ -83,13 +83,13 @@ var Cards = {
     render() {
       let cta = null;
       if (this.state.section.cta && this.state.section.cta == "Share") {
-        # TODO This isn't quite right. The button doesn't show properly and
+        /* TODO This isn't quite right. The button doesn't show properly and
         # the way this is configured I need a data model for the tweet text.
         #cta = (
         #  <a className="twitter-share-button"
         #    href="https://twitter.com/intent/tweet?text=Who%20is%20your%20financial%20celeb?" data-size="large">
         #  Tweet</a>
-        #);
+        ); */
       } else if (this.state.section.cta) {
         cta = <button className="btn btn-warning btn-large h4" onClick={ this.state.click }>{ this.state.section.cta }</button>;
       }
