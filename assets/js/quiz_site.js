@@ -1,3 +1,27 @@
+import {
+  ShareButtons,
+  generateShareIcon
+} from 'react-share';
+
+const {
+  FacebookShareButton,
+  GooglePlusShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+  TelegramShareButton,
+  WhatsappShareButton,
+  PinterestShareButton,
+  VKShareButton,
+  OKShareButton,
+  RedditShareButton,
+  EmailShareButton,
+} = ShareButtons;
+
+const FacebookIcon = generateShareIcon('facebook');
+const TwitterIcon = generateShareIcon('twitter');
+const LinkedinIcon = generateShareIcon('linkedin');
+const EmailIcon = generateShareIcon('email');
+
 import axios from "axios"
 import React from "react"
 
@@ -19,7 +43,8 @@ var Cards = {
         choices: props.choices,
         score: props.score,
         emailClick: props.emailClick,
-        drip_id: props.drip_id
+        drip_id: props.drip_id,
+        result_id: props.result_id
       }
     }
 
@@ -83,13 +108,26 @@ var Cards = {
     render() {
       let cta = null;
       if (this.state.section.cta && this.state.section.cta == "Share") {
-        /* TODO This isn't quite right. The button doesn't show properly and
-        # the way this is configured I need a data model for the tweet text.
-        #cta = (
-        #  <a className="twitter-share-button"
-        #    href="https://twitter.com/intent/tweet?text=Who%20is%20your%20financial%20celeb?" data-size="large">
-        #  Tweet</a>
-        ); */
+        /* TODO This isn't quite right. I need a data model for the tweet text.
+        */
+        var tweet_url = window.location.protocol + "//" + window.location.host + "/results/" + this.state.result_id;
+        var tweet_text = "Who is your financial celebrity spend alike? Here's mine."
+        cta = (
+          <div className="col-md-offset-4 col-md-4">
+            <FacebookShareButton url={ tweet_url } quote={ tweet_text } className="col-md-1">
+              <FacebookIcon size={32} round={true} />
+            </FacebookShareButton>
+            <TwitterShareButton url={ tweet_url } title={ tweet_text } className="col-md-1">
+              <TwitterIcon size={32} round={true} />
+            </TwitterShareButton>
+            <LinkedinShareButton url={ tweet_url } title={ tweet_text } className="col-md-1">
+              <LinkedinIcon size={32} round={true} />
+            </LinkedinShareButton>
+            <EmailShareButton url={ tweet_url } subject={ tweet_text } className="col-md-1">
+              <EmailIcon size={32} round={true} />
+            </EmailShareButton>
+          </div>
+        );
       } else if (this.state.section.cta) {
         cta = <button className="btn btn-warning btn-large h4" onClick={ this.state.click }>{ this.state.section.cta }</button>;
       }
@@ -98,12 +136,12 @@ var Cards = {
       if (this.state.section.image_path) {
         const src = Cards.image_path(this.state.section.image_path);
         img = (
-          <img src={src} width={ this.state.section.image_width } className="center-block" />
+          <img src={src} width="100%" className="img-fluid center-block" />
         );
       }
 
       var rendered = (
-          <div className="text-center">
+          <div className="text-center col-md-8 col-md-offset-2">
             <div className="img-container">
               { img }
             </div>
@@ -128,11 +166,14 @@ var Cards = {
 
   emailForm: function (props) {
     var form = (
-    <div className="text-center form-group col-md-6 col-md-offset-3">
+    <div className="text-center form-group col-md-6 col-md-offset-3 needs-validation">
       <h3 data-drip-attribute="headline">{ props.section.title }</h3>
       <div data-drip-attribute="description">{ props.section.content }</div>
         <div>
-            <input className="form-control" type="email" id="drip-email" name="fields[email]" placeholder="you@domain.com"/>
+            <input className="form-control" type="email" id="drip-email" name="fields[email]" placeholder="you@domain.com" required/>
+            <div className="invalid-feedback" id="email-error" style={{ display: 'none' }}>
+              Please provide a valid email address.
+            </div>
         </div>
       <div>
         <button className="btn btn-warning btn-large h4"
@@ -237,14 +278,19 @@ class QuizSite extends React.Component {
 
   componentDidMount() {
     var _this = this;
+    window.that = this;
     this.serverRequest =
       axios
-        .get("/cards")
+        .get("/api/cards")
         .then(function(result) {
-          _this.setState({
-            cards: result.data.data
-          });
-        })
+          if (!_this.resultId()) {
+            _this.setState({
+              cards: result.data.data
+            });
+          } else {
+            _this.resultData(result.data.data);
+          }
+        });
   }
 
   componentWillUnmount() {
@@ -262,6 +308,19 @@ class QuizSite extends React.Component {
 
   maxSequence() {
     return Math.max(...this.state.cards.map((elem) => { return elem.sequence }));
+  }
+
+  resultData(cardData) {
+    var resultId = this.resultId();
+    var _this = this;
+    if (resultId) {
+      this.serverRequest =
+        axios
+          .get("/api/results/" + resultId)
+          .then(function(result) {
+            _this.setState(Object.assign({}, _this.buildResultState(result.data.data, cardData), {cards: cardData}));
+          });
+    }
   }
 
   advance(sequence, cards, e) {
@@ -295,6 +354,7 @@ class QuizSite extends React.Component {
   }
 
   postEmailToDrip(e) {
+    const email_regexp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
     if (e) {
       const drip_form_url = "/drip/subscribe";
       var email = document.getElementById("drip-email");
@@ -302,16 +362,22 @@ class QuizSite extends React.Component {
       var score = this.state.score;
       var result_id = this.state.result_id;
       var _this = this;
-      var dripEmailRequest =
-        axios
-          .post(drip_form_url, qs.stringify({ "email": email.value, "score": score, "quiz_name": quiz_name, result_id: result_id, _csrf_token: this.csrfToken() }))
-          .then((result) => {
-            // TODO This null means that we don't track the email submission
-            // because we are storing choice_ids here and not a string or similar
-            // this is worth tracking, however, I should migrate the result object
-            // to that end
-            _this.advance(_this.state.sequence, _this.state.cards, null);
-          });
+      if (!email_regexp.test(email.value)) {
+        var email_error = document.getElementById("email-error");
+        email_error.style = "";
+        email.className += " is-invalid";
+      } else {
+        var dripEmailRequest =
+          axios
+            .post(drip_form_url, qs.stringify({ "email": email.value, "score": score, "quiz_name": quiz_name, result_id: result_id, _csrf_token: this.csrfToken() }))
+            .then((result) => {
+              // TODO This null means that we don't track the email submission
+              // because we are storing choice_ids here and not a string or similar
+              // this is worth tracking, however, I should migrate the result object
+              // to that end
+              _this.advance(_this.state.sequence, _this.state.cards, null);
+            });
+      }
     }
   }
 
@@ -340,7 +406,7 @@ class QuizSite extends React.Component {
     var _this = this;
     this.createResultRequest =
       axios
-        .post("/results", qs.stringify({ result: { quiz_name: this.state.cards[0].site}, _csrf_token: this.csrfToken() }))
+        .post("/api/results", qs.stringify({ result: { quiz_name: this.state.cards[0].site}, _csrf_token: this.csrfToken() }))
         .then((result) => {
           result_id = result.data.data.id;
           _this.storeResultId(result_id);
@@ -350,19 +416,39 @@ class QuizSite extends React.Component {
 
   storeResponse(result_id, choice_id) {
     axios
-          .post("/responses", qs.stringify({ response: { result_id: result_id, choice_id: choice_id }, _csrf_token: this.csrfToken() }))
+          .post("/api/responses", qs.stringify({ response: { result_id: result_id, choice_id: choice_id }, _csrf_token: this.csrfToken() }))
   }
 
   completeResult(sequence, result_id) {
     if (sequence == this.maxSequence()) {
       axios
-        .put("/results/" + result_id, qs.stringify({ result: { completed: true }, _csrf_token: this.csrfToken() }))
+        .put("/api/results/" + result_id, qs.stringify({ result: { completed: true }, _csrf_token: this.csrfToken() }))
     }
   }
 
   csrfToken() {
     var titleCard = document.getElementById("title-card");
     return titleCard.getAttribute("data-csrf-token");
+  }
+
+  resultId() {
+    var titleCard = document.getElementById("title-card");
+    return titleCard.getAttribute("data-result-id");
+  }
+
+  buildResultState(result, cardData) {
+    var choices = [];
+    var score = 0;
+    if (result["id"]) {
+      return {
+        choices: result["responses"].map((resp) => { return resp["choice"]["choice"]; }),
+        result_id: result["id"],
+        score: result["responses"].map((resp) => { return resp["choice"]["score"]; }).reduce((acc, value) => { return acc + value; }),
+        sequence: Math.max(...cardData.map((elem) => { return elem.sequence }))
+      };
+    } else {
+      return {};
+    }
   }
 
   render() {
@@ -383,6 +469,7 @@ class QuizSite extends React.Component {
                       choices={ this.state.choices }
                       score={ this.state.score }
                       drip_id={ card.drip_id }
+                      result_id={ this.state.result_id }
                       last={ last }
                       />);
       });
