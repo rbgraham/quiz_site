@@ -22,7 +22,7 @@ defmodule QuizSiteWeb.ResultController do
 
   def show(conn, %{"id" => id}) do
     result = Questions.get_result!(id)
-    render(conn, "show.json", result: result)
+    render conn, "show." <> get_format(conn), result: result, csrf_token: get_csrf_token()
   end
 
   def update(conn, %{"id" => id, "result" => result_params}) do

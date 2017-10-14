@@ -101,4 +101,10 @@ defmodule QuizSite.Results do
   def change_response(%Response{} = response) do
     Response.changeset(response, %{})
   end
+
+
+  def preload_response(%Response{} = response) do
+    response
+    |> Repo.preload(:choice)
+  end
 end

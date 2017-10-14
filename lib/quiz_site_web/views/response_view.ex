@@ -11,8 +11,10 @@ defmodule QuizSiteWeb.ResponseView do
   end
 
   def render("response.json", %{response: response}) do
+    response = QuizSite.Results.preload_response(response)
     %{id: response.id,
       choice_id: response.choice_id,
+      choice: render_one(response.choice, QuizSiteWeb.ChoiceView, "choice.json"),
       result_id: response.result_id}
   end
 end

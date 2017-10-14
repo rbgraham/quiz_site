@@ -1,0 +1,1 @@
+<div id="title-card" data-csrf-token="<%= @csrf_token %>" data-result-id="<%= @result.id %>"></div>

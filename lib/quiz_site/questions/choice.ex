@@ -11,6 +11,7 @@ defmodule QuizSite.Questions.Choice do
     field :score, :integer
 
     belongs_to :question, QuizSite.Card.Question
+    has_many :responses, QuizSite.Results.Response
 
     timestamps()
   end

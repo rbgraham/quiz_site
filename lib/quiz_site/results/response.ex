@@ -6,7 +6,7 @@ defmodule QuizSite.Results.Response do
 
   schema "responses" do
     belongs_to :result, QuizSite.Questions.Result
-    belongs_to :choice, QuizeSite.Questions.Choice
+    belongs_to :choice, QuizSite.Questions.Choice
 
     timestamps()
   end

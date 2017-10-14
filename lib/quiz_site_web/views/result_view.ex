@@ -11,7 +11,10 @@ defmodule QuizSiteWeb.ResultView do
   end
 
   def render("result.json", %{result: result}) do
+    result = QuizSite.Questions.preload_result_responses(result)
     %{id: result.id,
-      quiz_name: result.quiz_name}
+      quiz_name: result.quiz_name,
+      responses: render_many(result.responses, QuizSiteWeb.ResponseView, "response.json"),
+      }
   end
 end

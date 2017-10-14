@@ -8,7 +8,6 @@ cards:
       - content: "Most people aren't Warren Buffet but tell me you aren't Mike Tyson."
         cta: "Find out now!"
         title: "Do you spend like Matt Damon or MC Hammer?"
-        image_path: "money.png"
 
   - card:
     title: "Saving | Celebrity Spending"
@@ -238,70 +237,64 @@ cards:
     site: "celeb-quiz"
     sequence: 14
     sections:
+      - content: "Every celebrity spending pattern has advantages and downsides. We want to help you take your financial habits to the next level. Grab this free report to get started."
+        title: "Get a complete report with advice and projections"
+        cta: "Collect your full report!"
+        email_form: true
+
+  - card:
+    title: "Thanks for taking the celebrity spending quiz"
+    navigation: ""
+    site: "celeb-quiz"
+    sequence: 15
+    sections:
       - content: "You're MC Hammer. Please don't get too close. It might be contagious."
         title: "I'm so sorry"
         image_path: "mchammer.jpg"
-        image_width: "450px"
         conditions:
           - less_than: 0
       - content: "You're Mike Tyson. Easy come. Easy go."
         title: "Good and bad."
         image_path: "tyson.jpg"
-        image_width: "450px"
         conditions:
           - less_than: 20
             greater_than: 0
       - content: "You're the Jonas Brothers. Maybe the ones without that solo thing."
         title: "It could be a lot worse."
         image_path: "jonas2.jpg"
-        image_width: "450px"
         conditions:
           - less_than: 35
             greater_than: 19
       - content: "You're Jeremy Renner. Not bad, friend."
         title: "Renner"
         image_path: "renner.jpg"
-        image_width: "450px"
         conditions:
           - less_than: 45
             greater_than: 34
       - content: "You're Robert Downey, Jr. The good second arc."
         title: "Downey"
         image_path: "downey-jr.jpg"
-        image_width: "450px"
         conditions:
           - less_than: 60
             greater_than: 44
       - content: "You're Matt Damon. We love your work."
         title: "Damon"
         image_path: "damon.jpg"
-        image_width: "450px"
         conditions:
           - less_than: 75
             greater_than: 59
       - content: "You're Sir Richard Branson. Do work, my friend."
         title: "Knighted"
         image_path: "branson.jpg"
-        image_width: "450px"
         conditions:
           - less_than: 85
             greater_than: 74
       - content: "Warren Buffet. Welcome to our humble site."
         title: "The Oracle"
         image_path: "warren-buffet.jpg"
-        image_width: "450px"
         conditions:
           - greater_than: 84
-      - content: "Every celebrity spending pattern has advantages and downsides. We want to help you take your financial habits to the next level. Grab this free report to get started."
-        title: "Get a complete report with advice and projections"
-        cta: "Collect your full report!"
-        email_form: true
-  - card:
-    title: "We're preparing your customized report and will send it right over."
-    navigation: ""
-    site: "celeb-quiz"
-    sequence: 15
-    sections:
+      
       - content: "You can expect to receive the report within 24 hours. Share your results and compare with friends!"
         title: "We're excited share your results with you."
         cta: "Share"
