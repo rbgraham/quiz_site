@@ -19,6 +19,10 @@ defmodule QuizSiteWeb.SectionView do
       image_path: section.image_path,
       image_width: section.image_width,
       email_form: section.email_form,
+      share: section.share,
+      share_text: section.share_text,
+      skip_button: section.skip_button,
+      result_display: section.result_display,
       conditions: render_many(section.conditions, QuizSiteWeb.ConditionView, "condition.json"),
       cta: section.cta}
   end

@@ -63,4 +63,13 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .SocialMediaShareButton {
   margin-left: 1em;
+  margin-bottom: 2em;
+}
+
+.btn--skip {
+  color: #000;
+}
+
+.btn--email-set {
+  margin-bottom: 1.5em;
 }

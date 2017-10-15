@@ -7,6 +7,7 @@ defmodule QuizSite.Cards.Question do
   schema "questions" do
     field :question, :string
     field :subtext, :string
+    field :preserve_order, :boolean
 
     belongs_to :card, QuizSite.Page.Card
     has_many :choices, QuizSite.Questions.Choice
@@ -17,7 +18,7 @@ defmodule QuizSite.Cards.Question do
   @doc false
   def changeset(%Question{} = question, attrs) do
     question
-    |> cast(attrs, [:question, :subtext])
+    |> cast(attrs, [:question, :subtext, :preserve_order])
     |> validate_required([:question])
   end
 end

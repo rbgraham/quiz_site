@@ -15,6 +15,7 @@ defmodule QuizSiteWeb.QuestionView do
     %{id: question.id,
       question: question.question,
       card_id: question.card_id,
+      preserve_order: question.preserve_order,
       choices: render_many(question.choices, QuizSiteWeb.ChoiceView, "choice.json"),
       subtext: question.subtext}
   end

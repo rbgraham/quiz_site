@@ -43,14 +43,31 @@ var Cards = {
         choices: props.choices,
         score: props.score,
         emailClick: props.emailClick,
+        skip: props.skip,
+        emailKeyPress: props.emailKeyPress,
         drip_id: props.drip_id,
-        result_id: props.result_id
+        result_id: props.result_id,
+        back: props.back,
+        email_set: props.email_set,
+        result_display: props.result_display
       }
     }
 
     shouldDisplay() {
       if (this.state.section.conditions.length == 0) {
-        return true;
+        /* 
+         * Handle whether or not this is a results oriented shared page.
+         * The result page context may choose to show or hide certain sections
+         * so the content is relevant to the viewer.
+         */
+        if (this.state.result_display == false && this.state.section.result_display == false) {
+          return true;
+        } else if (this.state.result_display == true && this.state.section.result_display == true) {
+          return true;
+        } else if ((this.state.result_display == true && this.state.section.result_display == false) ||
+                  (this.state.result_display == false && this.state.section.result_display == true)) {
+          return false;
+        }
       } else if (this.scoreSection()) { 
         var cond = this.state.section.conditions[0];
         return this.checkScoreCondition(cond);
@@ -107,27 +124,40 @@ var Cards = {
 
     render() {
       let cta = null;
-      if (this.state.section.cta && this.state.section.cta == "Share") {
+      let share = null;
+      if (this.state.section.share) {
         /* TODO This isn't quite right. I need a data model for the tweet text.
         */
         var tweet_url = window.location.protocol + "//" + window.location.host + "/results/" + this.state.result_id;
-        var tweet_text = "Who is your financial celebrity spend alike? Here's mine."
-        cta = (
-          <div className="col-md-offset-4 col-md-4">
-            <FacebookShareButton url={ tweet_url } quote={ tweet_text } className="col-md-1">
+        var tweet_text = this.state.section.share_text;
+        share = (
+          <div className="col-md-offset-4 col-md-4 col-xs-4 col-xs-offset-3">
+            <FacebookShareButton url={ tweet_url } quote={ tweet_text } className="col-md-1 col-xs-1">
               <FacebookIcon size={32} round={true} />
             </FacebookShareButton>
-            <TwitterShareButton url={ tweet_url } title={ tweet_text } className="col-md-1">
+            <TwitterShareButton url={ tweet_url } title={ tweet_text } className="col-md-1 col-xs-1">
               <TwitterIcon size={32} round={true} />
             </TwitterShareButton>
-            <LinkedinShareButton url={ tweet_url } title={ tweet_text } className="col-md-1">
+            <LinkedinShareButton url={ tweet_url } title={ tweet_text } className="col-md-1 col-xs-1">
               <LinkedinIcon size={32} round={true} />
             </LinkedinShareButton>
-            <EmailShareButton url={ tweet_url } subject={ tweet_text } className="col-md-1">
+            <EmailShareButton url={ tweet_url } subject={ tweet_text } className="col-md-1 col-xs-1">
               <EmailIcon size={32} round={true} />
             </EmailShareButton>
           </div>
         );
+      }
+
+      /*
+       * A little bit (OK a lot) hacky to check the CTA string for making
+       * behavior, but I blame this being the last TODO before release.
+       */
+      if (this.state.section.cta && this.state.section.cta.includes("Go back")) {
+        if (!this.state.email_set) {
+          cta = <button className="btn btn-warning btn-sm h5 btn--email-set" onClick={ this.state.back }>{this.state.section.cta}</button>;
+        }
+      } else if (this.state.section.cta && this.state.section.cta.includes("Take the quiz!")) {
+        cta = <div><a className="btn btn-warning btn-large h4 btn--email-set" href="/" >{this.state.section.cta}</a></div>;
       } else if (this.state.section.cta) {
         cta = <button className="btn btn-warning btn-large h4" onClick={ this.state.click }>{ this.state.section.cta }</button>;
       }
@@ -151,6 +181,7 @@ var Cards = {
             <p className="h5">{ this.state.section.content }</p>
             <br/>
             { cta }
+            { share }
           </div>
       );
 
@@ -165,12 +196,30 @@ var Cards = {
   },
 
   emailForm: function (props) {
+    var skip = null;
+    if (props.section.skip_button) {
+      skip = (
+        <div>
+          <button className="btn btn-default btn-sm h5 btn--skip"
+            type="submit" name="skip"
+            onClick={ props.skip }>
+            Skip &gt;
+          </button>
+        </div>
+      );
+    }
     var form = (
     <div className="text-center form-group col-md-6 col-md-offset-3 needs-validation">
       <h3 data-drip-attribute="headline">{ props.section.title }</h3>
       <div data-drip-attribute="description">{ props.section.content }</div>
         <div>
-            <input className="form-control" type="email" id="drip-email" name="fields[email]" placeholder="you@domain.com" required/>
+            <input className="form-control"
+              type="email" 
+              id="drip-email" 
+              name="fields[email]" 
+              placeholder="you@domain.com"
+              onKeyPress={ props.emailKeyPress }
+              required/>
             <div className="invalid-feedback" id="email-error" style={{ display: 'none' }}>
               Please provide a valid email address.
             </div>
@@ -184,6 +233,7 @@ var Cards = {
           { props.section.cta }
         </button>
       </div>
+      { skip }
     </div>
     );
     return form;
@@ -229,7 +279,9 @@ var Cards = {
       );  
     }
     var choices = [];
-    props.question.choices.forEach((choice) => {
+    props.question.choices.sort((choice, choice_b) => {
+      return choice.id - choice_b.id;
+    }).forEach((choice) => {
       choices.push(<Cards.choice key={choice.choice} choice={choice} click={ props.click }/>);
     });
     return (
@@ -273,6 +325,8 @@ class QuizSite extends React.Component {
       choices: [],
       score: 0,
       result_id: null,
+      result_display: false,
+      email_set: false
     };
   }
 
@@ -326,13 +380,16 @@ class QuizSite extends React.Component {
   advance(sequence, cards, e) {
     let seq = sequence + 1;
     var result_id = this.state.result_id;
+    var email_set = this.state.email_set;
     if (seq > this.maxSequence()) {
       seq = this.maxSequence();
     }
 
     var score = this.state.score;
     var choices = this.state.choices;
-    if (e) {
+    if (e === "email") {
+      email_set = true;
+    } else if (e) {
       choices.push(e.currentTarget.getAttribute("data-choice"));
       if (result_id) {
         this.storeResponse(result_id, e.currentTarget.value);
@@ -349,7 +406,19 @@ class QuizSite extends React.Component {
       sequence: seq,
       choices: choices,
       result_id: result_id,
+      email_set: email_set,
       score: score
+    });
+  }
+
+  back(sequence, e) {
+    let seq = sequence - 1;
+    if (seq < 1) {
+      seq = 1;
+    }
+
+    this.setState({
+      sequence: seq
     });
   }
 
@@ -375,8 +444,16 @@ class QuizSite extends React.Component {
               // because we are storing choice_ids here and not a string or similar
               // this is worth tracking, however, I should migrate the result object
               // to that end
-              _this.advance(_this.state.sequence, _this.state.cards, null);
+              _this.advance(_this.state.sequence, _this.state.cards, "email");
             });
+      }
+    }
+  }
+
+  sectionKeyPress() {
+    return (e) => {
+      if (e.charCode == 13) {
+        this.postEmailToDrip(e);
       }
     }
   }
@@ -399,6 +476,10 @@ class QuizSite extends React.Component {
 
   questionCta() {
     return (e) => this.advance(this.state.sequence, this.state.cards, e);
+  }
+
+  goBack() {
+    return (e) => this.back(this.state.sequence, e);
   }
 
   initResult(choice_id) {
@@ -444,7 +525,9 @@ class QuizSite extends React.Component {
         choices: result["responses"].map((resp) => { return resp["choice"]["choice"]; }),
         result_id: result["id"],
         score: result["responses"].map((resp) => { return resp["choice"]["score"]; }).reduce((acc, value) => { return acc + value; }),
-        sequence: Math.max(...cardData.map((elem) => { return elem.sequence }))
+        sequence: Math.max(...cardData.map((elem) => { return elem.sequence })),
+        result_display: true,
+        email_set: true,
       };
     } else {
       return {};
@@ -466,11 +549,15 @@ class QuizSite extends React.Component {
         sections.push(<Cards.section key={ s.id } section={ s }
                       click={ this.sectionCta(card.sequence) }
                       emailClick={ this.sectionEmailForm() }
+                      skip={ this.sectionCta(card.sequence) }
+                      back={ this.goBack() }
                       choices={ this.state.choices }
                       score={ this.state.score }
                       drip_id={ card.drip_id }
                       result_id={ this.state.result_id }
                       last={ last }
+                      result_display={ this.state.result_display }
+                      email_set={ this.state.email_set }
                       />);
       });
       const title = card.title + " | Celebrity Financial Twin Quiz";
