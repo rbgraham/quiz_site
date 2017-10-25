@@ -88,15 +88,12 @@ cards:
         choices: 
           - choice: "Hot"
             image_path: "heart.png"
-            microcopy: false
             score: -5
           - choice: "Bored"
             image_path: "rock-on.png"
-            microcopy: false
             score: 5
           - choice: "Troubled"
             image_path: "crying.png"
-            microcopy: false
             score: 10
 
   - card:
@@ -124,23 +121,18 @@ cards:
     questions:
       - question: "What is your current income level?"
         choices: 
-          - choice: "20k"
+          - choice: "Always behind"
             image_path: "pray.png"
-            microcopy: false
-          - choice: "30k"
+          - choice: "Scraping by"
             image_path: "poo.png"
-            microcopy: false
-          - choice: "50k"
+          - choice: "Average"
             image_path: "taco.png"
-            microcopy: false
             score: 5
-          - choice: "75k"
+          - choice: "Doing well"
             image_path: "strong.png"
-            microcopy: false
             score: 10
-          - choice: "100k+"
+          - choice: "Quite well"
             image_path: "money.png"
-            microcopy: false
             score: 10
 
 
