@@ -14,7 +14,7 @@ create. You will know what questions they answered, how they answered, and where
 they dropped off.
 
 QuizSite will collect email addresses and send them via API to
-[Drip](getdrip.com). If you would like me to connect to other systems, drop me
+[Drip](https://wwww.getdrip.com). If you would like me to connect to other systems, drop me
 a line and we can talk about it.
 
 QuizSite is a compromise. It still takes some technical skills, but it reduces
