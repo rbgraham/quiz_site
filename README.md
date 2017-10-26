@@ -142,7 +142,21 @@ Mainly, you update the YAML, images and then run two commands:
 
 ## What about a custom URL? DNS?
 
-TODO
+This is tricky depending on the specifics of your situation, but I can speak to
+the general strategy here with Heroku and most of the ideas are transferrable.
+
+Heroku will allow you to select a custom domain you own in the setting for your
+app when you login. You will want to both select "www.yourdomain.com" and set
+Heroku to manage the SSL certificate for you. This will greatly simplify some of
+the potential issues in forwarding across domains and protocols (http/https).
+
+In your DNS or domain provider DNS settings you will want to forward
+"http://yourdomain.com" to "https://www.yourdomain.com". You can then create
+a CNAME record in your DNS for the URL that Heroku will show in your settings to
+point to.
+
+Wait about 10m (as many as 60m may be required) and try your URL. You should
+have a shiny QuizSite established at https://www.yourdomain.com. =)
 
 # Forking your own site from this repo
 
@@ -365,7 +379,7 @@ or links to additional quizzes or information.
 
 # Security and License
 
-The license is MIT. See LICENSE.txt.
+The license is MIT. See [LICENSE.txt](/LICENSE.txt).
 
 The security for this project is necessarily imperfect as offered. You will
 ultimately be the best judge for your own context. The contributors to this
