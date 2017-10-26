@@ -62,7 +62,6 @@ defmodule QuizSite.DatabaseSeeder do
     Repo.delete_all(Card)
     Repo.delete_all(Question)
     Repo.delete_all(Section)
-    Repo.delete_all(Choice)
     Repo.delete_all(Condition)
   end
 
