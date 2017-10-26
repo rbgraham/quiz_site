@@ -1,0 +1,66 @@
+cards:
+  - card:
+    title: "Hello World"
+    navigation: ""
+    site: "sample-quiz"
+    sequence: 1
+    sections:
+      - content: "This is a sample section paragraph."
+        cta: "This is button copy!"
+        title: "This is a section header."
+
+  - card:
+    title: "Sports"
+    navigation: ""
+    site: "sample-quiz"
+    sequence: 2
+    questions:
+      - question: "What is your favorite sport?"
+        choices:
+          - choice: "I hate sports"
+            score: 0
+          - choice: "All of them"
+            score: 1
+          - choice: "Baseball"
+            score: 10
+          - choice: "Basketball"
+            score: 10
+          - choice: "Football"
+            score: 15
+          - choice: "Soccer"
+            score: 10
+          - choice: "Other"
+            score: 5
+
+  - card:
+    title: "Sports Feels"
+    navigation: ""
+    site: "sample-quiz"
+    sequence: 3
+    questions:
+      - question: "How do you feel playing sports or games?"
+        choices:
+          - choice: "I hate sports"
+            image_path: "crying.png"
+            score: 0
+          - choice: "YES"
+            score: 1
+            image_path: "strong.png"
+          - choice: "OK"
+            score: 10
+            image_path: "thumbsup.png"
+          - choice: "Meh"
+            score: 10
+            image_path: "thumbsdown.png"
+  - card:
+    title: "Email report"
+    navigation: ""
+    site: "sample-quiz"
+    sequence: 4
+    sections:
+        - content: "Thanks for taking our super sweet sports quiz."
+          title: "Get a new report about sports injuries for your competitive profile."
+          cta: "Collect your report"
+          email_form: true
+          skip_button: true
+
